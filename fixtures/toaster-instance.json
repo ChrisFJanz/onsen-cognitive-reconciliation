@@ -1,0 +1,13 @@
+{
+  "example-toaster:toaster": [
+    {
+      "id": "kitchen-1",
+      "serial-number": "AB123456",
+      "manufacturer": "Acme",
+      "model-number": "TST-900",
+      "darkness-factor": 7,
+      "status": "up",
+      "supported-bread": ["white", "rye", "sourdough"]
+    }
+  ]
+}

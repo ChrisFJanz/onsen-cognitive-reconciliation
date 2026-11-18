@@ -1,0 +1,169 @@
+{
+  "run_id": "l3sm-full",
+  "provider": "openai",
+  "model": "gpt-4o",
+  "trials": 20,
+  "characteristics_per_trial": 209,
+  "nodes_with_leaves": 90,
+  "metrics": {
+    "api_calls_this_run": 1842,
+    "seconds_this_run": 2172.6,
+    "prompt_tokens": 624030,
+    "completion_tokens": 130080,
+    "estimated_cost_usd": 2.8609
+  },
+  "trials_passed": 12,
+  "convergence_rate": 0.6,
+  "per_trial": [
+    {
+      "trial": 1,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 2,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 3,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 4,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 5,
+      "pass": false,
+      "mismatches": 2
+    },
+    {
+      "trial": 6,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 7,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 8,
+      "pass": false,
+      "mismatches": 2
+    },
+    {
+      "trial": 9,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 10,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 11,
+      "pass": false,
+      "mismatches": 2
+    },
+    {
+      "trial": 12,
+      "pass": false,
+      "mismatches": 2
+    },
+    {
+      "trial": 13,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 14,
+      "pass": false,
+      "mismatches": 1
+    },
+    {
+      "trial": 15,
+      "pass": false,
+      "mismatches": 2
+    },
+    {
+      "trial": 16,
+      "pass": false,
+      "mismatches": 2
+    },
+    {
+      "trial": 17,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 18,
+      "pass": true,
+      "mismatches": 0
+    },
+    {
+      "trial": 19,
+      "pass": false,
+      "mismatches": 1
+    },
+    {
+      "trial": 20,
+      "pass": true,
+      "mismatches": 0
+    }
+  ],
+  "aggregated_mismatches": [
+    {
+      "leaf": "L3VPNSite:site-network-accesses/site-network-access/access-diversity/constraints/constraint/target/all-other-accesses",
+      "trials_mismatched": 6,
+      "oracle": [
+        "all-other-accesses",
+        "boolean"
+      ],
+      "agent": [
+        "all-other-accesses",
+        "string"
+      ]
+    },
+    {
+      "leaf": "L3VPNSite:site-network-accesses/site-network-access/access-diversity/constraints/constraint/target/all-other-groups",
+      "trials_mismatched": 6,
+      "oracle": [
+        "all-other-groups",
+        "boolean"
+      ],
+      "agent": [
+        "all-other-groups",
+        "string"
+      ]
+    },
+    {
+      "leaf": "L3VPNSite:service/qos/qos-profile/classes/class/bandwidth/end-to-end",
+      "trials_mismatched": 1,
+      "oracle": [
+        "end-to-end",
+        "boolean"
+      ],
+      "agent": [
+        "end-to-end",
+        "string"
+      ]
+    },
+    {
+      "leaf": "L3VPNSite:site-network-accesses/site-network-access/service/qos/qos-profile/classes/class/bandwidth/end-to-end",
+      "trials_mismatched": 1,
+      "oracle": [
+        "end-to-end",
+        "boolean"
+      ],
+      "agent": [
+        "end-to-end",
+        "string"
+      ]
+    }
+  ]
+}

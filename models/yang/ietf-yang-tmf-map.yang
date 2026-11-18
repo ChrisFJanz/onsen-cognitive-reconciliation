@@ -1,0 +1,49 @@
+module ietf-yang-tmf-map {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-yang-tmf-map";
+  prefix tmf;
+
+  organization
+    "IETF ONSEN Working Group";
+  contact
+    "WG Web:   https://datatracker.ietf.org/wg/onsen/
+     Draft:    draft-lls-onsen-yang-tmf-mapping";
+  description
+    "Local copy of the mapping-annotation extension module defined in
+     draft-lls-onsen-yang-tmf-mapping-00. Used here only to parse and
+     interpret tmf: annotations on example models. Not a republication
+     of the draft. Replace with the authoritative module text before
+     any exact-payload comparison against the draft.";
+
+  revision 2026-02-23 {
+    description "Initial revision, per draft-lls-onsen-yang-tmf-mapping-00.";
+    reference "draft-lls-onsen-yang-tmf-mapping-00";
+  }
+
+  extension cfs-service {
+    argument name;
+    description
+      "Marks the annotated container or list as the root of a mapping
+       to a TMF Customer Facing Service (CFS) of the given name.";
+  }
+
+  extension rfs-service {
+    argument name;
+    description
+      "Marks the annotated container or list as the root of a mapping
+       to a TMF Resource Facing Service (RFS) of the given name.";
+  }
+
+  extension resource {
+    argument name;
+    description
+      "Marks the annotated container or list as the root of a mapping
+       to a TMF Resource of the given name.";
+  }
+
+  extension ignore {
+    description
+      "The annotated node and its subtree are excluded from the
+       YANG-to-TMF mapping.";
+  }
+}

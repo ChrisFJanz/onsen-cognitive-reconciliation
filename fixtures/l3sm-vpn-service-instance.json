@@ -1,0 +1,29 @@
+{
+  "ietf-l3vpn-svc:vpn-service": [
+    {
+      "vpn-id": "acme-l3vpn-001",
+      "customer-name": "AcmeCorp",
+      "vpn-service-topology": "ietf-l3vpn-svc:any-to-any",
+      "carrierscarrier": false,
+      "cloud-accesses": {
+        "cloud-access": [
+          {
+            "cloud-identifier": "aws-us-east-1",
+            "address-translation": {
+              "nat44": {
+                "enabled": true,
+                "nat44-customer-address": "203.0.113.5"
+              }
+            }
+          }
+        ]
+      },
+      "multicast": {
+        "enabled": true,
+        "customer-tree-flavors": {
+          "tree-flavor": ["ietf-l3vpn-svc:source-tree"]
+        }
+      }
+    }
+  ]
+}

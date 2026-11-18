@@ -1,0 +1,158 @@
+module ietf-l3vpn-ntw-extract {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-l3vpn-ntw";
+  prefix l3nm;
+
+  organization
+    "Representative extract for the ONSEN reconciliation demonstrator.";
+  contact
+    "Christopher Janz";
+  description
+    "A faithful representative subtree of the L3NM network data model
+     (RFC 9182, module ietf-l3vpn-ntw), used to demonstrate service-to-network
+     reconciliation (L3SM, RFC 8299, to L3NM). Node names and structure follow
+     RFC 9182; this is a focused extract, not the full module, and types are
+     reduced to base types so it parses standalone. Drop in the full RFC 9182
+     module to reconcile against it verbatim.
+
+     The network view holds facts the service model does not: the provider edge
+     (PE) that realizes a site, and the route distinguisher and route targets.
+     Its bandwidth and QoS directions are relative to the PE interface (the
+     network's frame), the inverse of the L3SM site frame. Those are the
+     interrogation and pragmatics hazards the demonstrator exercises.";
+
+  revision 2026-11-17 {
+    description "Extract for the ONSEN service-to-network reconciliation.";
+    reference "RFC 9182";
+  }
+
+  container l3vpn-ntw {
+    description "Operator (network) view of Layer 3 VPN services.";
+    container vpn-services {
+      description "The provider-provisioned L3 VPNs.";
+      list vpn-service {
+        key "vpn-id";
+        description "One L3 VPN, network realization view.";
+        leaf vpn-id {
+          type string;
+          description "Operator-assigned VPN identifier.";
+        }
+        leaf customer-name {
+          type string;
+          description "The customer the VPN is for.";
+        }
+        leaf vpn-service-topology {
+          type string;
+          description "any-to-any, hub-spoke; the realized topology.";
+        }
+        container vpn-nodes {
+          description "The PEs that realize this VPN.";
+          list vpn-node {
+            key "ne-id";
+            description "One provider edge (PE) realizing the VPN.";
+            leaf ne-id {
+              type string;
+              description
+                "Network element (PE) identifier. Network-assigned, and not
+                 present anywhere in the service model.";
+            }
+            leaf role {
+              type string;
+              description "any-to-any-role, hub-role, or spoke-role.";
+            }
+            leaf router-id {
+              type string;
+              description "The PE's router id.";
+            }
+            container rd-rt {
+              description "Route distinguisher and route targets.";
+              leaf route-distinguisher {
+                type string;
+                description
+                  "RD, assigned by the operator. Not derivable from the
+                   service model.";
+              }
+              leaf-list route-target {
+                type string;
+                description "Import and export route targets, network-assigned.";
+              }
+            }
+            container vpn-network-accesses {
+              description "PE-CE attachments on this PE.";
+              list vpn-network-access {
+                key "id";
+                description
+                  "One PE-CE attachment, the network realization of a service
+                   site-network-access.";
+                leaf id {
+                  type string;
+                  description "Attachment identifier.";
+                }
+                leaf interface-id {
+                  type string;
+                  description "The PE interface bearing the attachment.";
+                }
+                leaf encapsulation-type {
+                  type string;
+                  description
+                    "dot1q, untagged, qinq, and others. The set of access
+                     encapsulations grows as the network gains capabilities.";
+                }
+                container ip-connection {
+                  description "Addressing on the attachment.";
+                  leaf provider-address {
+                    type string;
+                  }
+                  leaf customer-address {
+                    type string;
+                  }
+                  leaf prefix-length {
+                    type uint8;
+                  }
+                }
+                container service {
+                  description
+                    "Bandwidth and QoS at the PE interface. Direction is
+                     relative to the PE, the inverse of the L3SM site frame.";
+                  leaf inbound-bandwidth {
+                    type uint64;
+                    units "bps";
+                    description
+                      "Bandwidth into the PE from the CE (site to network).
+                       PE frame.";
+                  }
+                  leaf outbound-bandwidth {
+                    type uint64;
+                    units "bps";
+                    description
+                      "Bandwidth out of the PE toward the CE (network to site).
+                       PE frame.";
+                  }
+                  container qos {
+                    description "QoS profile applied at the PE interface.";
+                    container qos-profile {
+                      leaf profile {
+                        type string;
+                      }
+                      leaf direction {
+                        type string;
+                        description "inbound or outbound, relative to the PE.";
+                      }
+                    }
+                  }
+                }
+                container routing-protocols {
+                  description "PE-CE routing.";
+                  leaf type {
+                    type string;
+                    description "bgp, static, ospf.";
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+module example-toaster {
+  yang-version 1.1;
+  namespace "urn:example:params:xml:ns:yang:example-toaster";
+  prefix toast;
+
+  import ietf-yang-tmf-map { prefix tmf; }
+
+  organization "Example";
+  description
+    "Representative annotated toaster model, aligned with the example
+     usage in draft-lls-onsen-yang-tmf-mapping-00 (a 'toaster' list
+     annotated tmf:cfs-service). Exercises every mapping rule in the
+     draft's sections 3 and 4: container, list, leaf, leaf-list,
+     defaults, mandatory, min/max-elements, unique, and the range,
+     length, pattern and enumeration constraints.
+
+     NOTE: this is a faithful stand-in, not a transcription of the
+     draft's printed module. Swap in the draft's exact module text to
+     diff generated payloads against the draft's Appendix verbatim.";
+
+  revision 2026-11-17 {
+    description "Initial representative revision for the demonstrator.";
+  }
+
+  list toaster {
+    key "id";
+    unique "serial-number";
+    tmf:cfs-service "Toaster";
+    description "A managed toaster, mapped to a TMF CFS named 'Toaster'.";
+
+    leaf id {
+      type string {
+        length "1..64";
+      }
+      description "Toaster identifier (list key, always mandatory).";
+    }
+
+    leaf serial-number {
+      type string {
+        pattern "[A-Z]{2}[0-9]{6}";
+      }
+      mandatory true;
+      description "Serial number, two letters then six digits.";
+    }
+
+    leaf manufacturer {
+      type string;
+      mandatory true;
+      description "Toaster manufacturer.";
+    }
+
+    leaf model-number {
+      type string;
+      description "Toaster model number.";
+    }
+
+    leaf darkness-factor {
+      type uint16 {
+        range "1..10";
+      }
+      default 5;
+      description "Requested darkness, 1 (lightest) to 10 (darkest).";
+    }
+
+    leaf status {
+      type enumeration {
+        enum up;
+        enum down;
+      }
+      default up;
+      description "Operational status.";
+    }
+
+    leaf-list supported-bread {
+      type string;
+      min-elements 1;
+      max-elements 8;
+      description "Bread types this toaster accepts.";
+    }
+  }
+}
