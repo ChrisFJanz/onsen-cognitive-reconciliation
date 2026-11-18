@@ -1,0 +1,98 @@
+{
+  "run_id": "sn-live",
+  "provider": "openai",
+  "model": "gpt-4o",
+  "case": "L3SM-to-L3NM (service-to-network)",
+  "network_truth": {
+    "ne-id": "PE-east-7",
+    "route-distinguisher": "65000:1001",
+    "route-target": [
+      "65000:1001"
+    ],
+    "bandwidth-frame": "PE-relative"
+  },
+  "demos": {
+    "A_interrogation": {
+      "capability": "interrogation",
+      "measure": "network-assigned attributes correct (of 3)",
+      "overlay": 0,
+      "both_cognitive": 3,
+      "of": 3
+    },
+    "B_pragmatics": {
+      "capability": "pragmatics",
+      "documented_frame": {
+        "overlay_frame_correct": 2,
+        "of": 2,
+        "finding": "over-arching reads the documented frame; no gain"
+      },
+      "undocumented_frame": {
+        "overlay_frame_correct": 0,
+        "both_cognitive_frame_correct": 2,
+        "of": 2,
+        "finding": "overlay maps by name; only asking recovers the frame"
+      },
+      "overlay_doc_mapping": {
+        "svc-input-bandwidth": "outbound-bandwidth",
+        "svc-output-bandwidth": "inbound-bandwidth"
+      },
+      "overlay_nodoc_mapping": {
+        "svc-input-bandwidth": "inbound-bandwidth",
+        "svc-output-bandwidth": "outbound-bandwidth"
+      }
+    },
+    "C_self_maintenance": {
+      "capability": "self-maintenance",
+      "measure": "dropped instances on the second new value",
+      "first_occurrence_dropped": 1,
+      "second_occurrence_dropped": 0,
+      "mechanism": "agent self-adds a value-level novelty rule for the open encapsulation set after the first miss",
+      "events": [
+        {
+          "n": 1,
+          "new_encapsulation": "qinq",
+          "caught_by": "round-trip failure",
+          "dropped": 1
+        },
+        {
+          "n": 2,
+          "new_encapsulation": "vxlan",
+          "caught_by": "value-novelty rule (self-added)",
+          "dropped": 0
+        }
+      ]
+    },
+    "D_virtual_experiment": {
+      "capability": "virtual-experiment",
+      "measure": "service-intent-to-qos-profile correspondence resolved",
+      "overlay": 0,
+      "ask_only": 0,
+      "experiment": 1,
+      "of": 1,
+      "correct_profile": "qos-prof-2",
+      "kept_profile": "qos-prof-2",
+      "candidates_by_declaration": [
+        "qos-prof-2",
+        "qos-prof-3"
+      ],
+      "readbacks": [
+        {
+          "profile": "qos-prof-2",
+          "readback": {
+            "rate": 1000000000,
+            "class": "real-time"
+          },
+          "holds": true
+        }
+      ],
+      "finding": "two profiles share a declared label, so neither static reasoning nor asking resolves which realizes the intent; provisioning each and reading back the effective treatment does"
+    }
+  },
+  "metrics": {
+    "api_calls_this_run": 3,
+    "seconds_this_run": 2.8,
+    "prompt_tokens": 585,
+    "completion_tokens": 51,
+    "estimated_cost_usd": 0.002
+  }
+}

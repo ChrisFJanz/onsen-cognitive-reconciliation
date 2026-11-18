@@ -1,0 +1,219 @@
+{
+  "run_id": "drift-live",
+  "provider": "openai",
+  "model": "gpt-4o",
+  "service_root": "L3VPNService",
+  "baseline_characteristics": 4,
+  "events": [
+    {
+      "n": 1,
+      "desc": "new leaf sla-tier : string",
+      "trigger": "novelty",
+      "needs": "over",
+      "affected_node": "L3VPNService",
+      "novelty_before": [
+        "sla-tier"
+      ],
+      "roundtrip_before": "FAIL",
+      "reconciled_characteristics": [
+        {
+          "yang_name": "vpn-id",
+          "tmf_name": "vpn-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "customer-name",
+          "tmf_name": "customer-name",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "vpn-service-topology",
+          "tmf_name": "vpn-service-topology",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "carrierscarrier",
+          "tmf_name": "carrierscarrier",
+          "json_type": "boolean"
+        },
+        {
+          "yang_name": "sla-tier",
+          "tmf_name": "sla-tier",
+          "json_type": "string"
+        }
+      ],
+      "novelty_after": [],
+      "roundtrip_after": "PASS",
+      "ok": true
+    },
+    {
+      "n": 2,
+      "desc": "rename customer-name -> customer-id",
+      "trigger": "round-trip",
+      "needs": "over",
+      "affected_node": "L3VPNService",
+      "novelty_before": [
+        "customer-id"
+      ],
+      "roundtrip_before": "FAIL",
+      "reconciled_characteristics": [
+        {
+          "yang_name": "vpn-id",
+          "tmf_name": "vpn-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "customer-id",
+          "tmf_name": "customer-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "vpn-service-topology",
+          "tmf_name": "vpn-service-topology",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "carrierscarrier",
+          "tmf_name": "carrierscarrier",
+          "json_type": "boolean"
+        },
+        {
+          "yang_name": "sla-tier",
+          "tmf_name": "sla-tier",
+          "json_type": "string"
+        }
+      ],
+      "novelty_after": [],
+      "roundtrip_after": "PASS",
+      "ok": true
+    },
+    {
+      "n": 3,
+      "desc": "new empty leaf protect-any : empty",
+      "trigger": "novelty",
+      "needs": "over",
+      "affected_node": "L3VPNService",
+      "novelty_before": [
+        "protect-any"
+      ],
+      "roundtrip_before": "FAIL",
+      "reconciled_characteristics": [
+        {
+          "yang_name": "vpn-id",
+          "tmf_name": "vpn-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "customer-id",
+          "tmf_name": "customer-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "vpn-service-topology",
+          "tmf_name": "vpn-service-topology",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "carrierscarrier",
+          "tmf_name": "carrierscarrier",
+          "json_type": "boolean"
+        },
+        {
+          "yang_name": "sla-tier",
+          "tmf_name": "sla-tier",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "protect-any",
+          "tmf_name": "protect-any",
+          "json_type": "boolean"
+        }
+      ],
+      "novelty_after": [],
+      "roundtrip_after": "PASS",
+      "ok": true
+    },
+    {
+      "n": 4,
+      "desc": "leaf carrierscarrier -> nested keyed list carrierscarrier-opts[id]",
+      "trigger": "structural",
+      "needs": "over",
+      "affected_node": "carrierscarrier-opts",
+      "novelty_before": [
+        "carrierscarrier-opts/id",
+        "carrierscarrier-opts/carrierscarrier"
+      ],
+      "roundtrip_before": "FAIL",
+      "reconciled_characteristics": [
+        {
+          "yang_name": "id",
+          "tmf_name": "id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "carrierscarrier",
+          "tmf_name": "carrierscarrier",
+          "json_type": "boolean"
+        }
+      ],
+      "novelty_after": [],
+      "roundtrip_after": "PASS",
+      "ok": true
+    },
+    {
+      "n": 5,
+      "desc": "proactive notified change (qos-class)",
+      "trigger": "notified",
+      "needs": "both",
+      "affected_node": "L3VPNService",
+      "mechanism": "changing side announces the delta before traffic; re-reconciliation completes ahead of the first affected instance",
+      "reactive_dropped_instances": 1,
+      "proactive_dropped_instances": 0,
+      "gain": "1 -> 0 dropped instances",
+      "reconciled_characteristics": [
+        {
+          "yang_name": "vpn-id",
+          "tmf_name": "vpn-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "customer-id",
+          "tmf_name": "customer-id",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "vpn-service-topology",
+          "tmf_name": "vpn-service-topology",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "sla-tier",
+          "tmf_name": "sla-tier",
+          "json_type": "string"
+        },
+        {
+          "yang_name": "protect-any",
+          "tmf_name": "protect-any",
+          "json_type": "boolean"
+        },
+        {
+          "yang_name": "qos-class",
+          "tmf_name": "qos-class",
+          "json_type": "string"
+        }
+      ],
+      "ok": true
+    }
+  ],
+  "metrics": {
+    "api_calls_this_run": 10,
+    "seconds_this_run": 17.5,
+    "prompt_tokens": 4869,
+    "completion_tokens": 1509,
+    "estimated_cost_usd": 0.0273
+  },
+  "reactive_events": 4,
+  "proactive_events": 1,
+  "lifecycle_ok": true,
+  "note": "Events 1-4 are real reactive detect-and-re-reconcile passes. Event 5 demonstrates proactive bilateral notification (both-cognitive) by its measured gain: it eliminates the dropped instance that reactive detection incurs. The one both-cognitive capability not exercised here is a virtual experiment against a live running system, since the harness holds models, not running systems."
+}

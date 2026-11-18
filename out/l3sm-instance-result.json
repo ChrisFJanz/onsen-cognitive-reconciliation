@@ -1,0 +1,118 @@
+{
+  "faithfulness_roundtrip": "PASS",
+  "features": 6,
+  "tmf_service": [
+    {
+      "@type": "Service",
+      "serviceSpecification": {
+        "name": "L3VPNService"
+      },
+      "serviceCharacteristic": [
+        {
+          "name": "vpn-id",
+          "value": "acme-l3vpn-001"
+        },
+        {
+          "name": "customer-name",
+          "value": "AcmeCorp"
+        },
+        {
+          "name": "vpn-service-topology",
+          "value": "ietf-l3vpn-svc:any-to-any"
+        },
+        {
+          "name": "carrierscarrier",
+          "value": false
+        }
+      ],
+      "feature": [
+        {
+          "name": "cloud-accesses",
+          "featureCharacteristic": [],
+          "featureRelationship": [
+            {
+              "relationshipType": "composedOf",
+              "name": "L3VPNService"
+            }
+          ]
+        },
+        {
+          "name": "cloud-accesses/cloud-access[cloud-identifier='aws-us-east-1']",
+          "featureCharacteristic": [
+            {
+              "name": "cloud-identifier",
+              "value": "aws-us-east-1"
+            }
+          ],
+          "featureRelationship": [
+            {
+              "relationshipType": "composedOf",
+              "name": "cloud-accesses"
+            }
+          ]
+        },
+        {
+          "name": "cloud-accesses/cloud-access[cloud-identifier='aws-us-east-1']/address-translation",
+          "featureCharacteristic": [],
+          "featureRelationship": [
+            {
+              "relationshipType": "composedOf",
+              "name": "cloud-accesses/cloud-access[cloud-identifier='aws-us-east-1']"
+            }
+          ]
+        },
+        {
+          "name": "cloud-accesses/cloud-access[cloud-identifier='aws-us-east-1']/address-translation/nat44",
+          "featureCharacteristic": [
+            {
+              "name": "enabled",
+              "value": true
+            },
+            {
+              "name": "nat44-customer-address",
+              "value": "203.0.113.5"
+            }
+          ],
+          "featureRelationship": [
+            {
+              "relationshipType": "composedOf",
+              "name": "cloud-accesses/cloud-access[cloud-identifier='aws-us-east-1']/address-translation"
+            }
+          ]
+        },
+        {
+          "name": "multicast",
+          "featureCharacteristic": [
+            {
+              "name": "enabled",
+              "value": true
+            }
+          ],
+          "featureRelationship": [
+            {
+              "relationshipType": "composedOf",
+              "name": "L3VPNService"
+            }
+          ]
+        },
+        {
+          "name": "multicast/customer-tree-flavors",
+          "featureCharacteristic": [
+            {
+              "name": "tree-flavor",
+              "value": [
+                "ietf-l3vpn-svc:source-tree"
+              ]
+            }
+          ],
+          "featureRelationship": [
+            {
+              "relationshipType": "composedOf",
+              "name": "multicast"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

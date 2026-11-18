@@ -1,0 +1,93 @@
+{
+  "run_id": "basic-live",
+  "model": "gpt-4o",
+  "trials": 10,
+  "mode": "basic-unannotated",
+  "candidate_nodes": 24,
+  "metrics": {
+    "api_calls_this_run": 417,
+    "seconds_this_run": 488.7,
+    "prompt_tokens": 128482,
+    "completion_tokens": 35200,
+    "estimated_cost_usd": 0.6732
+  },
+  "roots_per_trial": [
+    {
+      "trial": 1,
+      "roots": [
+        "sites/site",
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 2,
+      "roots": [
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 3,
+      "roots": [
+        "sites/site/service",
+        "vpn-profiles",
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 4,
+      "roots": [
+        "vpn-services"
+      ]
+    },
+    {
+      "trial": 5,
+      "roots": [
+        "sites/site/service",
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 6,
+      "roots": [
+        "sites/site",
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 7,
+      "roots": [
+        "vpn-profiles",
+        "vpn-services"
+      ]
+    },
+    {
+      "trial": 8,
+      "roots": [
+        "sites/site/service",
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 9,
+      "roots": [
+        "sites/site/service",
+        "vpn-services/vpn-service"
+      ]
+    },
+    {
+      "trial": 10,
+      "roots": [
+        "sites",
+        "vpn-profiles",
+        "vpn-services"
+      ]
+    }
+  ],
+  "modal_service_roots": [
+    "sites/site/service",
+    "vpn-services/vpn-service"
+  ],
+  "root_agreement": 0.3,
+  "characteristics_in_modal": 40,
+  "mapping_agreement_given_roots": 0.0
+}

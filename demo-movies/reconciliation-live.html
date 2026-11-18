@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YANG &harr; TM Forum Reconciliation — cognitive agent-to-agent demonstrator</title>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#121826; --panel2:#0f1420; --edge:#243049;
+    --ink:#e7edf7; --dim:#8da0bf; --faint:#5d6e8c;
+    --yang:#5fd38d; --yang2:#0e3a2a;
+    --tmf:#7aa2ff; --tmf2:#172447;
+    --bus:#c9a227; --lex:#b98bd6; --lex2:#2a1c3a;
+    --think:#9aa7c0; --action:#ffd166; --result:#5fd38d; --warn:#ff8b6b; --plan:#b98bd6;
+    --heavy:#ff8b6b; --med:#ffd166; --cheap:#36c2a8; --mech:#8da0bf;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+  h1{font-size:17px;margin:0}
+  .sub{color:var(--dim);font-size:12.5px;max-width:1180px}
+  .toolbar{position:sticky;top:0;z-index:100;background:#0c1018;border-bottom:1px solid var(--edge);padding:10px 20px 11px;box-shadow:0 6px 16px rgba(0,0,0,.45)}
+  .tbar-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .author{color:var(--bus);font-size:13px;font-weight:600;white-space:nowrap}
+  .author .lbl{color:var(--faint);font-weight:400;font-size:11px;margin-right:5px;text-transform:uppercase;letter-spacing:.5px}
+  .wrap{padding:14px 16px;max-width:1520px;margin:0 auto}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  button{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:7px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+  button:hover{background:#243151}
+  button.primary{background:var(--bus);color:#1b1500;border-color:#e2bd3b;font-weight:600}
+  button:disabled{opacity:.4;cursor:default}
+  .speed{color:var(--dim);font-size:12px;margin-left:6px}
+  select{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px 8px}
+  .counter{color:var(--dim);font-size:12px;margin-left:14px}
+  /* cognition-placement spectrum strip */
+  .spectrum{display:flex;align-items:stretch;margin-top:11px;border:1px solid var(--edge);border-radius:8px;overflow:hidden}
+  .sphead{display:flex;align-items:center;padding:0 12px;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);background:#0d131f;border-right:1px solid var(--edge);white-space:nowrap}
+  .sp{flex:1;padding:7px 10px;text-align:center;border-right:1px solid var(--edge);background:#0f1626;transition:background .25s}
+  .sp:last-child{border-right:none}
+  .sp .spt{font-weight:700;font-size:11.5px;color:var(--dim)}
+  .sp .sps{font-size:9.5px;color:var(--faint)}
+  .sp.here{background:var(--yang2)} .sp.here .spt{color:var(--yang)} .sp.here .sps{color:#9fe0bb}
+  .sp.aspir{background:var(--lex2)} .sp.aspir .spt{color:var(--lex)} .sp.aspir .sps{color:#d4b8ea}
+  .youhere{display:block;font-size:8.5px;font-weight:700;letter-spacing:.5px;margin-top:2px}
+  .phases{display:flex;gap:5px;flex-wrap:wrap;margin-top:11px}
+  .phase{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--edge);color:var(--faint);background:#0f1626;white-space:nowrap}
+  .phase.active{color:#1b1500;background:var(--bus);border-color:#e2bd3b;font-weight:600}
+  .phase.done{color:var(--result);border-color:#27543c}
+  .phase.chg{border-color:#5a3d78}
+  header{padding:10px 20px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#10182a,#0c1018)}
+  .about{background:var(--panel);border:1px solid var(--edge);border-radius:10px;margin-top:14px;overflow:hidden}
+  .about>h2{font-size:14px;margin:0;padding:11px 14px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#13203a,transparent)}
+  .about .body{padding:14px 18px;max-width:1220px}
+  .about .body.collapsed{display:none}
+  .about .body p{margin:0 0 10px;font-size:12.5px;line-height:1.55;color:#d4deef}
+  .about .body b.y{color:var(--yang)} .about .body b.t{color:var(--tmf)} .about .body b.l{color:var(--lex)}
+  .about .body code{font-family:var(--mono);font-size:11px;color:#bcd0ee;background:#0a0e16;border:1px solid var(--edge);padding:1px 4px;border-radius:3px}
+  .about-toggle{background:#1b2540;color:var(--dim);border:1px solid var(--edge);border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer}
+  .stagenote{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(90deg,#16213c,#0f1626);border:1px solid var(--edge);border-left:3px solid var(--bus);border-radius:8px;padding:11px 15px;margin-top:13px}
+  .stagenote .lab{color:var(--bus);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;padding-top:2px;min-width:168px}
+  .stagenote .txt{font-size:12.8px;line-height:1.5;color:#d4deef;flex:1}
+  .stagenote .txt b{color:#fff}
+  .advwrap{min-width:230px;max-width:250px;padding-top:1px}
+  .advlab{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px}
+  .advbadge{font-size:10.5px;padding:4px 9px;border-radius:7px;font-weight:600;display:block;line-height:1.35}
+  .adv-none{background:#0e3a33;color:var(--cheap);border:1px solid #1c5248}
+  .adv-adds{background:#241a36;color:var(--lex);border:1px solid #4a3570}
+  .adv-needs{background:#33261c;color:var(--med);border:1px solid #5a4a2a}
+  .instr{display:grid;grid-template-columns:200px 1fr 1fr;gap:10px;margin-top:10px}
+  .icard{background:var(--panel);border:1px solid var(--edge);border-radius:8px;padding:9px 12px}
+  .icard .h{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px}
+  .icard .v{font-size:12px;color:#d4deef;line-height:1.4}
+  .cogrow{display:flex;align-items:center;gap:9px}
+  .cogbadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:10px}
+  .cog-heavy{background:#3a221c;color:var(--heavy)} .cog-med{background:#3a2f12;color:var(--med)}
+  .cog-cheap{background:#0e3a33;color:var(--cheap)} .cog-mech{background:#232b38;color:var(--mech)}
+  .meter{display:inline-flex;gap:3px}
+  .meter i{width:7px;height:13px;border-radius:2px;background:#243049;display:inline-block}
+  .meter i.on.h{background:var(--heavy)} .meter i.on.m{background:var(--med)} .meter i.on.c{background:var(--cheap)}
+  .measure{color:var(--result);font-family:var(--mono);font-size:11.5px}
+  .agents{display:grid;grid-template-columns:1fr 0.92fr 1fr;gap:12px;margin-top:14px}
+  .col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;display:flex;flex-direction:column;min-height:260px}
+  .col.yang{border-top:3px solid var(--yang)}
+  .col.tmf{border-top:3px solid var(--tmf)}
+  .col.bus{border-top:3px solid var(--bus)}
+  .col h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:10.5px;font-weight:400;color:var(--dim)}
+  .log{flex:1;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11.8px;max-height:320px}
+  .line{margin:0 0 6px;padding-left:15px;position:relative;white-space:pre-wrap;word-break:break-word;animation:fade .35s ease}
+  .line::before{position:absolute;left:0;top:0}
+  .line.think{color:var(--think)} .line.think::before{content:'·';color:var(--faint)}
+  .line.action{color:var(--action)} .line.action::before{content:'▸'}
+  .line.result{color:var(--result)} .line.result::before{content:'✓'}
+  .line.warn{color:var(--warn)} .line.warn::before{content:'!'}
+  .line.plan{color:var(--plan)} .line.plan::before{content:'✎'}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+  .msg{border:1px solid var(--edge);border-radius:8px;margin:0 0 9px;overflow:hidden;animation:fade .35s ease;background:var(--panel2)}
+  .msg .mh{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;font-size:11px;border-bottom:1px solid var(--edge)}
+  .msg.fromY .mh{background:linear-gradient(90deg,var(--yang2),transparent)}
+  .msg.fromT .mh{background:linear-gradient(270deg,var(--tmf2),transparent)}
+  .msg.fromV .mh{background:linear-gradient(90deg,#2a2140,transparent)}
+  .dir{font-weight:700;letter-spacing:.3px}
+  .dir.y{color:var(--yang)} .dir.t{color:var(--tmf)} .dir.v{color:var(--lex)}
+  .method{color:var(--bus);font-family:var(--mono);font-size:10.5px}
+  .msg .summary{padding:6px 9px;font-size:11.5px;color:var(--ink)}
+  .tabs{margin-top:16px;border:1px solid var(--edge);border-radius:10px;background:var(--panel);overflow:hidden}
+  .tabbar{display:flex;border-bottom:1px solid var(--edge);flex-wrap:wrap}
+  .tabbtn{padding:10px 13px;font-size:12.3px;cursor:pointer;color:var(--dim);border-right:1px solid var(--edge);background:var(--panel2)}
+  .tabbtn.active{color:var(--ink);background:var(--panel);font-weight:600}
+  .tabpane{display:none;padding:14px 16px;max-height:620px;overflow-y:auto}
+  .tabpane.active{display:block}
+  .note{font-size:12px;color:var(--dim);margin-bottom:10px;line-height:1.5}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--edge);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .empty{color:var(--faint);font-style:italic;padding:18px;text-align:center}
+  .lexgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:8px}
+  .lexcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:7px;padding:8px 10px;font-size:11px;opacity:.45;transition:opacity .3s,border-color .3s}
+  .lexcard.bound{opacity:1}
+  .lexcard.gap{border-left-color:var(--warn)}
+  .lexcard .lid{font-family:var(--mono);font-size:10.5px;color:var(--lex);font-weight:700}
+  .lexcard .lnm{font-weight:700;color:var(--ink)}
+  .lexcard .lrow{margin-top:3px;color:var(--dim);font-size:10.5px}
+  .lexcard .lk{color:var(--faint);text-transform:uppercase;letter-spacing:.3px;font-size:9px}
+  pre.code{background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#c7d6f0;overflow-x:auto;white-space:pre}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tcol h3{font-size:12px;margin:0 0 7px;display:flex;align-items:center;gap:7px}
+  .tcol.y h3{color:var(--yang)} .tcol.t h3{color:var(--tmf)}
+  .owned{font-size:9.5px;color:var(--faint);font-weight:400;text-transform:uppercase;letter-spacing:.4px}
+  .struct{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+  .struct .col{min-height:0}
+  .struct svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 35%,#0f1726,#0b0f18)}
+  /* locate scatter */
+  .loc{display:flex;flex-direction:column;gap:8px}
+  .locrow{display:grid;grid-template-columns:200px 1fr 150px;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--edge);border-radius:8px;padding:9px 11px}
+  .locrow.gran{border-left:3px solid var(--cheap)}
+  .locrow.cog{border-left:3px solid var(--warn)}
+  .locrow.auth{border-left:3px solid var(--lex)}
+  .locname{font-family:var(--mono);font-size:11.5px;color:var(--ink)}
+  .locname .sub2{display:block;font-family:var(--sans);font-size:10px;color:var(--faint)}
+  .bars{display:flex;gap:4px;flex-wrap:wrap}
+  .bseg{font-size:10px;padding:2px 7px;border-radius:5px;background:#1b2540;color:var(--dim);border:1px solid var(--edge)}
+  .bseg.hi{background:var(--yang2);color:var(--yang);border-color:#1c5248}
+  .bseg.wn{background:#33261c;color:var(--med);border-color:#5a4a2a}
+  .bseg.bd{background:#2a1414;color:var(--warn);border-color:#5a2a2a}
+  .kind{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;text-align:right}
+  .kind.gran{color:var(--cheap)} .kind.cog{color:var(--warn)} .kind.auth{color:var(--lex)}
+  /* spectrum readout */
+  .readout th:nth-child(2),.readout td:nth-child(2){background:#0d1f17}
+  .readout th:nth-child(3),.readout td:nth-child(3){background:#1a1230}
+  .yes{color:var(--result);font-weight:700} .no{color:var(--warn);font-weight:700}
+  .eq{color:var(--faint)} .gain{color:var(--cheap);font-weight:700} .arch{color:var(--med);font-weight:600;font-style:italic}
+  .ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .ledger .lc{border:1px solid var(--edge);border-radius:9px;overflow:hidden}
+  .ledger .lc.off{border-top:3px solid var(--warn)} .ledger .lc.on{border-top:3px solid var(--lex)}
+  .pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+  .pill.nov{background:#3a2f12;color:#ffd166}.pill.rt{background:#2a1414;color:#ff8b6b}.pill.pro{background:#2a2140;color:#b98bd6}
+  .pill.struct{background:#13314a;color:#7cc6ff}.pill.ref{background:#0e3a33;color:#36c2a8}
+  .reqtag{font-size:9.5px;padding:2px 7px;border-radius:9px;font-weight:700;margin-left:6px}
+  .req-over{background:#0e3a33;color:var(--cheap)} .req-both{background:#33261c;color:var(--med)}
+  .foot{color:var(--faint);font-size:11px;margin-top:18px;border-top:1px solid var(--edge);padding-top:12px;line-height:1.55}
+  .foot b{color:var(--dim)}
+  .muted{color:var(--faint)}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="tbar-title">
+    <h1>YANG &harr; TM Forum Reconciliation — cognitive agent-to-agent demonstrator</h1>
+    <span class="author"><span class="lbl">demo by</span>Christopher Janz</span>
+  </div>
+  <div class="controls">
+    <button id="play" class="primary">▶ Play</button>
+    <button id="step">Step ▸</button>
+    <button id="reset">⟲ Reset</button>
+    <span class="speed">speed</span>
+    <select id="speed">
+      <option value="1500">slow</option>
+      <option value="850" selected>normal</option>
+      <option value="350">fast</option>
+    </select>
+    <span class="counter" id="counter"></span>
+  </div>
+  <div class="spectrum" id="spectrum">
+    <div class="sphead">Placement of<br>cognition</div>
+    <div class="sp" id="sp-both"><div class="spt">Both cognitive</div><div class="sps">ask, test, be notified</div></div>
+    <div class="sp" id="sp-one"><div class="spt">One inert</div><div class="sps">probe a static side</div></div>
+    <div class="sp" id="sp-over"><div class="spt">Both inert · over-arching</div><div class="sps">one reasoner over static models</div></div>
+  </div>
+  <div class="phases" id="phases"></div>
+</div>
+
+<header>
+  <div class="sub">
+    Reconciling the IETF L3SM service model (RFC 8299) to a TM Forum representation, with no full mapping agreed in advance.
+    <b style="color:var(--yang)">Agent&nbsp;Y</b> works the YANG side, <b style="color:var(--tmf)">Agent&nbsp;T</b> the TMF side, over a thin
+    <b style="color:var(--lex)">shared reference</b>. Most of the run sits at one placement, both systems inert under a single over-arching
+    cognition; the closing drift event and the service-to-network case reach the <b>both-cognitive</b> end and are marked where they do. Each panel is marked for where moving toward both-cognitive buys a real, measured advantage, and where it buys nothing.
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="about">
+    <h2><span>About this demonstrator — what you're looking at, and what is real</span>
+        <button class="about-toggle" id="aboutToggle">Hide ▲</button></h2>
+    <div class="body" id="aboutBody">
+      <p>Neither system here is cognitive. A single over-arching cognition reconciles two inert models from their static artifacts. That is the realistic placement today, and the demonstrator stays honest to it: the two <b class="y">agents</b> are the two roles of one reasoning loop over static models, not two live systems interrogating each other. The <b>spectrum strip</b> above shows where the run sits, and every stage is tagged for whether a more cognitive placement would add anything.</p>
+      <p><b>Everything scored is a real harness run.</b> The authority-withheld locate scatter, the 209-characteristic annotated mapping, the <code>empty</code> residual, the instance round-trip, and the drift detection and re-reconciliation are the published harness's actual outputs, replayed from recorded transcripts. The conversational lines are a readable rendering of those runs, not invented. Anyone can reproduce them with their own API licence.</p>
+    </div>
+  </div>
+
+  <div class="stagenote">
+    <span class="lab" id="stageLab">Ready</span>
+    <span class="txt" id="stageTxt">Press <b>▶ Play</b>. The agents try to locate the services with no standard, see where that fails, take the one authority call a published annotation supplies, then reconcile the whole model, validate it, and hold it through ongoing change.</span>
+    <span class="advwrap"><span class="advlab">Full cognition here would</span><span class="advbadge adv-none" id="advBadge">—</span></span>
+  </div>
+
+  <div class="instr">
+    <div class="icard"><div class="h">Cognition load</div>
+      <div class="cogrow"><span class="cogbadge cog-mech" id="cogBadge">—</span>
+        <span class="meter" id="cogMeter"><i></i><i></i><i></i></span></div></div>
+    <div class="icard"><div class="h">What closes the gap</div><div class="v" id="mechTxt">—</div></div>
+    <div class="icard"><div class="h">Verified by · measure</div><div class="v" id="verifyTxt">—</div>
+      <div class="measure" id="measureTxt" style="margin-top:4px"></div></div>
+  </div>
+
+  <div id="depiction" style="margin:0 0 9px;padding:9px 13px;border:1px solid var(--edge);border-left:3px solid var(--edge);border-radius:8px;background:var(--panel2);font-size:12px;line-height:1.5;color:var(--dim)"></div>
+  <div class="agents">
+    <div class="col yang">
+      <h2><span id="hdrY">🟢 Agent&nbsp;Y — YANG / L3SM side</span><span class="tag">RFC 8299 · ietf-l3vpn-svc</span></h2>
+      <div class="log" id="logY"></div>
+    </div>
+    <div class="col bus">
+      <h2><span id="hdrBus">🟡 A2A message bus</span><span class="tag">TMF Agentic / JSON-RPC</span></h2>
+      <div class="log" id="bus"></div>
+    </div>
+    <div class="col tmf">
+      <h2><span id="hdrT">🔵 Agent&nbsp;T — TM Forum side</span><span class="tag">TMF633 / TMF640</span></h2>
+      <div class="log" id="logT"></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tabbar" id="tabbar">
+      <div class="tabbtn active" data-tab="locate">Locate · authority-withheld</div>
+      <div class="tabbtn" data-tab="ref">Shared reference</div>
+      <div class="tabbtn" data-tab="struct">Structural map</div>
+      <div class="tabbtn" data-tab="resid">Residual · the empty type</div>
+      <div class="tabbtn" data-tab="trans">Two translators</div>
+      <div class="tabbtn" data-tab="trace">Traces · round-trip</div>
+      <div class="tabbtn" data-tab="change">Continuous operation</div>
+      <div class="tabbtn" data-tab="sn">Service → Network</div>
+      <div class="tabbtn" data-tab="readout">Spectrum readout</div>
+    </div>
+
+    <div class="tabpane active" id="pane-locate">
+      <div class="note">With no annotations, each agent must decide which nodes are the customer-facing services before any mapping. Across <b>ten independent trials</b> the agents produced the same set of service roots only <b>three times</b> (root agreement 0.30). The scatter is not noise; it sorts into three kinds the methodology already names.</div>
+      <div class="loc" id="locBody"><div class="empty">Fills in at the locate stage.</div></div>
+    </div>
+    <div class="tabpane" id="pane-ref">
+      <div class="note">A thin reference — not YANG, not TMF — pinning identity only. Each side binds its concepts here; entries light up as they bind. Binding rests on the description, never a bare name, which is what screens a false cognate.</div>
+      <div class="lexgrid" id="lexGrid"></div>
+    </div>
+    <div class="tabpane" id="pane-struct">
+      <div class="note">The structural gap. The YANG side nests containers and lists; the TMF side is a flat collection of Features linked by <code>composedOf</code>. A real ontological difference, not a naming one, and what the translators transform.</div>
+      <div class="struct">
+        <div class="col yang"><h2><span>YANG tree — nested</span><span class="tag" id="yStat"></span></h2><svg id="svgY" viewBox="0 0 440 300"></svg></div>
+        <div class="col tmf"><h2><span>TMF Features — flat, composedOf</span><span class="tag" id="tStat"></span></h2><svg id="svgT" viewBox="0 0 440 300"></svg></div>
+      </div>
+    </div>
+    <div class="tabpane" id="pane-resid">
+      <div class="note">The one case the standard leaves open. YANG <code>empty</code> is absent from the draft's type table. Without an anchor the agents waver between boolean and string across trials; the reference, or a one-line specification, pins it so it does not re-diverge. This is the single place a more cognitive placement could close the case by itself.</div>
+      <div id="residBody"><div class="empty">Reached at the type-pinning stage.</div></div>
+    </div>
+    <div class="tabpane" id="pane-trans">
+      <div class="note">Not one translator but two, one per direction, and each side generates and operates the inbound translator it relies on. Neither side imposes a mapping on the other; each owns the translation into its own world. Both are deterministic and carry no inference at run time.</div>
+      <div class="twocol" id="transBody">
+        <div class="tcol y"><h3>▸ translator into YANG <span class="owned">owned &amp; run by Agent Y</span></h3>
+          <pre class="code" id="transY"><span class="muted">— emitted after the mapping is constructed —</span></pre></div>
+        <div class="tcol t"><h3>▸ translator into TMF <span class="owned">owned &amp; run by Agent T</span></h3>
+          <pre class="code" id="transT"><span class="muted">— emitted after the mapping is constructed —</span></pre></div>
+      </div>
+    </div>
+    <div class="tabpane" id="pane-trace">
+      <div class="note">Deterministic application: a real L3SM vpn-service instance through the translators, YANG → TMF → YANG. Faithfulness is self-checking.</div>
+      <div id="traceBody"><div class="empty">Runs at the validate stage.</div></div>
+    </div>
+    <div class="tabpane" id="pane-change">
+      <div class="note">Ongoing change. Each change is caught by a cheap, always-on check, re-reconciled on the affected node only, and verified. Each row is tagged by the placement it needs: reactive handling runs with over-arching cognition; proactive notification needs both sides cognitive.</div>
+      <table><thead><tr><th>#</th><th>Change</th><th>Trigger</th><th>Scope</th><th>Needs</th><th>Verified</th></tr></thead>
+        <tbody id="chgBody"><tr><td colspan="6" class="empty">Fills in during continuous operation.</td></tr></tbody></table>
+      <div id="chgTally" style="margin-top:10px"></div>
+      <div style="margin-top:10px;background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--tmf);border-radius:8px;padding:10px 13px;font-size:11.5px;color:var(--dim);line-height:1.5">
+        <b style="color:var(--tmf)">Provenance.</b> The real drift-live run (gpt-4o) applies five change events. Rows 1–4 are real reactive detect-and-re-reconcile passes: a new leaf, a rename, a new empty-typed leaf (bound to boolean), and a leaf promoted to a nested keyed list, each caught by the novelty and round-trip senses and re-reconciled by a real agent call on the affected node. Row 5 reaches the both-cognitive placement: the changing side announces the delta before traffic, and the gain is measured against reactive handling of the same change, 0 dropped instances versus 1. Ten agent calls in all. The virtual experiment, the other both-cognitive capability, runs in the service-to-network case, not here.
+      </div>
+    </div>
+    <div class="tabpane" id="pane-sn">
+      <div class="note">The second case: L3SM service model to L3NM network model (RFC 9182), the cross-abstraction pole. Four capabilities, over-arching against both-cognitive. Where the first case shows over-arching cognition sufficing, this one shows where a cognitive counterpart earns its place.</div>
+      <div id="snBody"><div class="empty">Runs in the service-to-network act.</div></div>
+    </div>
+    <div class="tabpane" id="pane-readout">
+      <div class="note">The spectrum, read honestly. For each capability: what the demonstrated over-arching placement achieves, and what moving to both-cognitive would add. Where it adds nothing, that is the result, not a gap: the determinate interop problem needs no cognitive systems.</div>
+      <div id="readoutBody"><div class="empty">Compiles at the end.</div></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>Provenance.</b> Scored figures are the published harness's real outputs, replayed from recorded transcripts: the authority-withheld locate over ten trials (root agreement 0.30), the annotated whole-model mapping (209 characteristics, 90 nodes, 20 trials, <code>empty</code> the sole residual), the instance round-trip, the drift lifecycle (five real events: four reactive passes and one proactive notification demonstrated by its measured gain, 0 dropped versus 1), and the service-to-network case (interrogation, pragmatics, self-maintenance, and a virtual experiment resolved by provision-and-readback). The agent dialogue is a readable rendering of those runs. A2A envelopes follow the TM Forum Agentic JSON-RPC <code>message/send</code> shape.
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+
+/* ---------- shared reference ---------- */
+const LEX=[
+ {id:'xref:l3vpn-service',nm:'L3VPN service',def:'a customer L3 VPN instance',y:'vpn-service (list)',t:'ServiceSpecification'},
+ {id:'xref:service-id',nm:'Service identifier',def:'stable key of the service',y:'vpn-id',t:'characteristic id'},
+ {id:'xref:customer',nm:'Customer name',def:'party the service is for',y:'customer-name',t:'characteristic'},
+ {id:'xref:topology',nm:'Service topology',def:'any-to-any, hub-spoke',y:'vpn-service-topology',t:'characteristic (enum)'},
+ {id:'xref:cloud-access',nm:'Cloud access',def:'access to a cloud provider',y:'cloud-accesses/cloud-access',t:'Feature'},
+ {id:'xref:nat',nm:'Address translation',def:'NAT44 on the access',y:'address-translation/nat44',t:'nested Feature'},
+ {id:'xref:multicast',nm:'Multicast',def:'multicast service options',y:'multicast',t:'Feature'},
+ {id:'xref:presence-flag',nm:'Presence flag',def:'a fact present or not; carries no value',y:'leaf of type empty',t:'boolean characteristic',gap:true}
+];
+function buildLex(){const g=$('lexGrid');g.innerHTML='';
+  LEX.forEach((e,i)=>{const d=document.createElement('div');d.className='lexcard'+(e.gap?' gap':'');d.id='lex'+i;
+    d.innerHTML=`<div><span class="lid">${e.id}</span></div><div class="lnm">${e.nm}</div>`+
+      `<div class="lrow"><span class="lk">def</span> ${e.def}</div>`+
+      `<div class="lrow" id="bind${i}"></div>`;g.appendChild(d);});}
+function bindLex(i){const e=LEX[i],d=$('lex'+i);d.classList.add('bound');
+  $('bind'+i).innerHTML=`<span style="color:var(--yang)">Y ${e.y}</span> · <span style="color:var(--tmf)">T ${e.t}</span>`;}
+
+/* ---------- locate scatter (real basic-live-result) ---------- */
+const LOCATE=[
+ {name:'vpn-services/vpn-service',sub:'the VPN service',kind:'gran',klab:'granularity',
+  segs:[['list node ×7','hi'],['container ×3','wn']],
+  note:'found as a service in all 10 trials; split only on level. A reference bind settles it.'},
+ {name:'sites/site · site/service · sites',sub:'is a site a service?',kind:'auth',klab:'authority',
+  segs:[['sites/site ×2','bd'],['site/service ×4','bd'],['sites ×1','bd'],['none ×3','bd']],
+  note:'split four ways. No reasoning closes it; it is an authority call, supplied by the annotation.'},
+ {name:'vpn-profiles',sub:'a reusable profile library',kind:'cog',klab:'false cognate',
+  segs:[['taken as a service ×3','wn'],['correctly excluded ×7','hi']],
+  note:'a profile library, not a customer-facing service. The reference description screens it.'}
+];
+function renderLocate(){const b=$('locBody');b.innerHTML='';
+  LOCATE.forEach(r=>{const row=document.createElement('div');row.className='locrow '+r.kind;
+    const segs=r.segs.map(s=>`<span class="bseg ${s[1]}">${s[0]}</span>`).join('');
+    row.innerHTML=`<div class="locname">${r.name}<span class="sub2">${r.sub}</span></div>`+
+      `<div><div class="bars">${segs}</div><div style="font-size:10.5px;color:var(--dim);margin-top:5px">${r.note}</div></div>`+
+      `<div class="kind ${r.kind}">${r.klab}</div>`;
+    b.appendChild(row);});}
+
+/* ---------- structural visual ---------- */
+function svgEl(t,a,txt){const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+function drawYang(){const s=$('svgY');s.innerHTML='';
+  const nodes=[['vpn-service',220,28,'c'],['cloud-accesses',110,90,'c'],['cloud-access',110,145,'l'],
+    ['address-translation',110,200,'c'],['nat44',110,255,'c'],['multicast',330,90,'c'],['sites/site',330,150,'c']];
+  const edges=[[220,40,110,82],[110,102,110,133],[110,157,110,192],[110,212,110,247],[220,40,330,82],[330,102,330,142]];
+  edges.forEach(([x1,y1,x2,y2])=>s.appendChild(svgEl('line',{x1,y1,x2,y2,stroke:'#2e3d5c','stroke-width':1.6})));
+  nodes.forEach(([nm,x,y,k])=>{const w=nm.length*6.4+16;
+    s.appendChild(svgEl('rect',{x:x-w/2,y:y-13,width:w,height:24,rx:5,fill:k==='l'?'#13223a':'#0e3a2a',stroke:'#5fd38d','stroke-width':1.4}));
+    s.appendChild(svgEl('text',{x,y:y+4,fill:'#cde8d8','font-size':10.5,'text-anchor':'middle','font-family':'monospace'},nm));});
+  $('yStat').textContent='nested';}
+function drawTmf(bound){const s=$('svgT');s.innerHTML='';
+  s.appendChild(svgEl('rect',{x:150,y:16,width:140,height:26,rx:6,fill:'#172447',stroke:'#7aa2ff','stroke-width':1.6}));
+  s.appendChild(svgEl('text',{x:220,y:33,fill:'#cfe0ff','font-size':11,'text-anchor':'middle','font-weight':700},'ServiceSpecification'));
+  const feats=[['cloud-accesses',70,95],['cloud-access',70,150],['address-translation',70,205],['nat44',70,255],['multicast',330,120],['sites/site',330,180]];
+  const comp=[[220,42,70,82],[70,107,70,138],[70,162,70,193],[70,217,70,243],[220,42,330,108],[330,132,330,168]];
+  if(bound){comp.forEach(([x1,y1,x2,y2])=>s.appendChild(svgEl('line',{x1,y1,x2,y2,stroke:'#3a4e78','stroke-width':1.4,'stroke-dasharray':'4 3'})));
+    feats.forEach(([nm,x,y])=>{const w=nm.length*6+14;
+      s.appendChild(svgEl('rect',{x:x-w/2,y:y-12,width:w,height:22,rx:5,fill:'#13223a',stroke:'#7aa2ff','stroke-width':1.3}));
+      s.appendChild(svgEl('text',{x,y:y+3,fill:'#cfe0ff','font-size':10,'text-anchor':'middle','font-family':'monospace'},nm));});
+    feats.forEach(([nm,x,y])=>s.appendChild(svgEl('text',{x,y:y-15,fill:'#5d6e8c','font-size':8,'text-anchor':'middle'},'composedOf')));
+  } else { s.appendChild(svgEl('text',{x:220,y:160,fill:'#5d6e8c','font-size':11,'text-anchor':'middle'},'— features emitted after structural reconciliation —')); }
+  $('tStat').textContent=bound?'flat · composedOf':'flat';}
+
+/* ---------- step script ---------- */
+function L(who,kind,text){return {t:'log',who,kind,text};}
+function M(dir,method,summary){return {t:'msg',dir,method,summary};}
+function STAGE(o){return Object.assign({t:'stage'},o);}
+function FX(fn){return {t:'fx',fn};}
+// place: 'over' (both inert / over-arching, where this run sits) | 'both' (aspirational)
+// adv:  {k:'none'|'adds'|'needs', t:'...'}
+
+const STEPS=[
+ STAGE({lab:'Stage 0 · Scenario & placement',place:'over',
+   txt:'Two systems hold the <b>same service</b> in different models, L3SM (YANG) and a TMF catalog view. <b>Neither is cognitive.</b> One over-arching cognition reconciles them from their static artifacts. The whole run sits at this one placement.',
+   cog:'mech',adv:{k:'none',t:'nothing — this is the realistic placement and the one we run'},
+   gap:'agree the method; neither model is merged',ver:'—',meas:''}),
+ L('Y','think','hold ietf-l3vpn-svc: vpn-service, sites, vpn-profiles, nested cloud-accesses, multicast …'),
+ L('T','think','hold a TMF catalog view: ServiceSpecification with Features and Characteristics'),
+ M('y→t','message/send','hello — propose ad hoc reconciliation, no prior mapping'),
+ L('T','result','accepted; both artifacts are readable, neither side is live'),
+
+ STAGE({lab:'Stage 1 · Locate (authority-withheld)',place:'over',
+   txt:'No annotations. The agents must decide <b>which nodes are the services</b> before mapping. Over ten trials they agree on the full set only three times. Root agreement 0.30.',
+   cog:'heavy',adv:{k:'adds',t:'a live authority could be asked which nodes are services; over-arching cognition has no one to ask'},
+   gap:'locate services from structure alone',ver:'ten independent trials',meas:'root agreement 0.30'}),
+ FX(()=>{renderLocate();}),
+ L('Y','action','propose services: vpn-service … and is a site a service? unsure'),
+ L('T','think','vpn-profiles looks service-like — or is it a shared library?'),
+ M('v','locate','10 trials: vpn-service always; site split 4 ways; vpn-profiles taken as a service 3×'),
+ L('Y','warn','no stable answer on the service boundary from structure alone'),
+
+ STAGE({lab:'Stage 1b · Read the scatter',place:'over',
+   txt:'Three kinds, each named by the methodology. <b>Granularity</b>: the VPN service, found every trial, split only on list vs container. <b>False cognate</b>: a profile library taken for a service in three trials. <b>Authority</b>: whether a site is a service, which no reasoning closes.',
+   cog:'med',adv:{k:'adds',t:'granularity and false cognate it resolves; the authority call it still cannot derive'},
+   gap:'sort the divergence into its kinds',ver:'decomposition',meas:'3 kinds'}),
+ L('Y','action','granularity: bind "the L3VPN service" to the list node — settled'),
+ L('T','action','false cognate: the reference description separates a service from a profile library — vpn-profiles excluded'),
+ L('T','warn','authority: "is a site a service" is governance, not modelling'),
+
+ STAGE({lab:'Stage 1c · The authority stipulation',place:'over',
+   txt:'The site question is settled not by reasoning but by a published annotation. <b>draft-lls-onsen-yang-tmf-mapping</b> marks which nodes are services. That is an authority call, not a mapping — a handful of annotations — and it is exactly what the agents cannot derive. With it, they reconcile downward reliably.',
+   cog:'cheap',adv:{k:'none',t:'the stipulation is thin and published; cognition need not, and cannot, derive it'},
+   gap:'publish the service boundary (the annotation)',ver:'authority call supplied',meas:'then determinate'}),
+ M('t→y','annotate','service roots fixed by tmf:cfs-service: vpn-service, site'),
+ L('Y','result','boundary given; everything downstream is now determinate'),
+
+ STAGE({lab:'Stage 2 · Lift',place:'over',
+   txt:'With the boundary fixed, each agent lifts its model to an explicit ontology. Heavy cognition, done once.',
+   cog:'heavy',adv:{k:'none',t:'nothing — lift works the same over static artifacts'},
+   gap:'lift to an explicit ontology on each side',ver:'self-consistency of the lift',meas:'comprehension ok'}),
+ L('Y','action','lift: concepts {service, site, access, nat, multicast}, relations {contains, rides}'),
+ L('T','action','lift: concepts {ServiceSpecification, Feature, Characteristic}, relation {composedOf}'),
+ L('Y','result','ontology Y explicit'), L('T','result','ontology T explicit'),
+
+ STAGE({lab:'Stage 3 · Bind the shared reference',place:'over',
+   txt:'Each side binds its concepts to the thin shared reference, which pins identity by description. Correspondences arrive as near-identity; no false cognates.',
+   cog:'med',adv:{k:'none',t:'nothing — the reference does the binding either way'},
+   gap:'binding to the reference by description',ver:'reference entries bound both sides',meas:'8 entries'}),
+ FX(()=>{for(let i=0;i<7;i++)bindLex(i);}),
+ L('Y','action','bind vpn-service → xref:l3vpn-service; vpn-id → xref:service-id …'),
+ L('T','action','bind ServiceSpecification → xref:l3vpn-service; id → xref:service-id …'),
+ M('v','bind','7 of 8 categories bound by shared reference'),
+ L('T','result','near-identity on the named concepts; no false cognates'),
+
+ STAGE({lab:'Stage 4 · Structural gap',place:'over',
+   txt:'The real ontological difference: YANG nests; TMF is a flat collection of Features linked by composedOf. The agents bind and transform rather than rename.',
+   cog:'heavy',adv:{k:'none',t:'nothing — the structural transform is read off the static trees'},
+   gap:'derive the transform: nesting → composedOf',ver:'every nested node reaches a Feature',meas:'flat · composedOf'}),
+ FX(()=>{drawTmf(true);}),
+ L('Y','think','cloud-accesses ⊃ cloud-access ⊃ address-translation ⊃ nat44 — four levels'),
+ L('T','action','flatten: one Feature per node, parent by composedOf, list entries keyed'),
+ M('t→y','align','granularity agreed: leaf-list → array; choice → optional characteristics'),
+ L('T','result','structure mapped; nested Features linked by composedOf'),
+
+ STAGE({lab:'Stage 5 · Pin types · the empty residual',place:'over',
+   txt:'YANG types map to JSON/TMF types. One case has no anchor in the standard: YANG <code>empty</code>. The agents waver boolean/string across trials. The reference pins it; <b>this is the one place a both-cognitive placement could close the case itself</b>, by asking the counterpart or testing the leaf.',
+   cog:'med',adv:{k:'adds',t:'ask the counterpart, or test whether the leaf carries a value, and close empty directly — a published type does the same, cheaper'},
+   gap:'map built-in types; anchor the unspecified one',ver:'type per leaf; residual pinned',meas:'1 residual'}),
+ L('Y','action','string→string, uintN→integer, enumeration→string, leaf-list→array …'),
+ L('T','warn','YANG empty is not in the draft type table — no rule to bind to'),
+ FX(()=>{$('residBody').innerHTML=
+   `<table><thead><tr><th>leaf</th><th>type</th><th>over-arching, no anchor</th><th>anchored</th></tr></thead><tbody>`+
+   `<tr><td><code>all-other-accesses</code></td><td>empty</td><td class="muted">boolean / string — wavers</td><td style="color:var(--result)">boolean (pinned)</td></tr>`+
+   `<tr><td><code>all-other-groups</code></td><td>empty</td><td class="muted">boolean / string — wavers</td><td style="color:var(--result)">boolean (pinned)</td></tr>`+
+   `<tr><td><code>end-to-end</code></td><td>empty</td><td class="muted">boolean / string — wavers</td><td style="color:var(--result)">boolean (pinned)</td></tr>`+
+   `</tbody></table><div style="margin-top:8px;color:var(--dim);font-size:12px">Across 20 annotated trials this was the <b>sole</b> source of divergence. Pinned once, it is settled. A more cognitive placement could settle it live instead.</div>`;
+   bindLex(7);}),
+ M('v','extend','reference gains one entry: presence-flag → boolean'),
+ L('Y','result','empty pinned to boolean — the lone residual, now closed'),
+
+ STAGE({lab:'Stage 6 · Two translators',place:'over',
+   txt:'Each side emits and operates <b>its own inbound translator</b>. Agent Y builds the one rendering TMF data into YANG; Agent T builds the one rendering YANG data into TMF. Neither imposes a mapping on the other.',
+   cog:'med',adv:{k:'none',t:'nothing — both translators compose from the agreed correspondence'},
+   gap:'compose one deterministic translator per direction',ver:'each translator type-checks',meas:'2 directions'}),
+ FX(()=>{
+   $('transT').textContent=
+`into TMF  (Agent T owns & runs)
+root  vpn-service        -> ServiceSpecification "L3VPNService"
+leaf  vpn-id             -> characteristic id              : string
+leaf  customer-name      -> characteristic customer-name   : string
+list  cloud-access[id]   -> Feature (composedOf parent)    : keyed
+leaf  all-other-accesses -> characteristic                 : boolean  (empty, pinned)
+...  209 characteristics, 90 nodes`;
+   $('transY').textContent=
+`into YANG  (Agent Y owns & runs)
+ServiceSpecification      -> vpn-service
+characteristic id         -> leaf  vpn-id                   : string
+characteristic customer-name -> leaf customer-name          : string
+Feature cloud-access      -> list  cloud-access[id]         : keyed
+characteristic (boolean)  -> leaf  all-other-accesses       : empty (present if true)
+...  inverse of the 209`;}),
+ M('y↔t','emit','two directional translators emitted; runtime needs no further inference'),
+ L('Y','result','into-YANG translator ready'), L('T','result','into-TMF translator ready'),
+
+ STAGE({lab:'Stage 7 · Validate by round-trip',place:'over',
+   txt:'A real L3SM vpn-service instance goes YANG → TMF → YANG through the two translators. Faithfulness is self-checking.',
+   cog:'mech',adv:{k:'none',t:'nothing — deterministic application of the emitted translators'},
+   gap:'apply the translators to real instance data',ver:'round-trip returns the original',meas:'PASS'}),
+ FX(()=>{$('traceBody').innerHTML=
+   `<pre class="code">vpn-service{ vpn-id:"acme-l3vpn-001", customer-name:"AcmeCorp",
+   cloud-accesses{ cloud-access[aws-us-east-1]{ nat44{ enabled:true } } },
+   multicast{ enabled:true } }
+   ↓ into-TMF translator
+TMF Service{ serviceCharacteristic:[id, customer-name, ...],
+   feature:[ cloud-accesses, cloud-access[...], nat44, multicast ] }
+   ↓ into-YANG translator
+vpn-service{ ... }   ✓ identical</pre>
+   <div style="margin-top:6px;color:var(--result);font-weight:700">faithfulness round-trip: PASS</div>`;}),
+ L('Y','result','round-trip returns the original instance — no loss'),
+
+ STAGE({lab:'Stage 8 · Scale',place:'over',
+   txt:'The whole model, both roots. On everything the standard specifies, the agents reproduce it exactly across 20 trials; the only divergence is the unanchored empty type. <b>The determinate bulk needs only over-arching cognition.</b>',
+   cog:'mech',adv:{k:'none',t:'nothing, and that is the headline: no cognitive systems are needed for the 209-way mapping'},
+   gap:'run the full model, repeated',ver:'20 independent trials vs the standard',meas:'20/20 specified'}),
+ L('T','result','209 characteristics, 90 nested nodes'),
+ L('Y','result','specified set: 20/20 trials, identifiers verbatim · whole-model 0.6, all residual = empty (now pinned)'),
+
+ // ---- continuous operation ----
+ STAGE({lab:'Continuous · change 1',place:'over',chg:true,
+   txt:'A new attribute appears on the TMF side. The translator meets an element it cannot map — a deterministic novelty sense, placement-independent.',
+   cog:'med',adv:{k:'none',t:'nothing — reactive re-reconciliation runs with over-arching cognition'},
+   gap:'incremental re-reconcile, one node',ver:'novelty fires; round-trip restored',meas:'node only'}),
+ L('T','warn','new characteristic sla-tier — translator has no mapping (novelty)'),
+ M('t→y','reconcile','wake Y for the affected node only'),
+ L('Y','action','re-reconcile 1 node; bind sla-tier → string'),
+ FX(()=>addChg('new attribute sla-tier','nov','1 node','over','round-trip ✓')),
+ L('Y','result','translators updated; nothing else touched'),
+
+ STAGE({lab:'Continuous · change 2',place:'over',chg:true,
+   txt:'A YANG identifier is renamed. The ongoing round-trip check fails — the real detection the harness performs.',
+   cog:'med',adv:{k:'none',t:'nothing — the round-trip guardrail is deterministic'},
+   gap:'incremental re-reconcile on round-trip failure',ver:'round-trip guardrail fires',meas:'node only'}),
+ L('Y','warn','customer-name → customer-id; round-trip now drops a field'),
+ FX(()=>addChg('rename customer-name→customer-id','rt','1 node','over','round-trip ✓')),
+ L('T','result','re-bound by a real single-node re-reconciliation; guardrail green again'),
+
+ STAGE({lab:'Continuous · change 3',place:'over',chg:true,
+   txt:'A new empty-typed leaf is added. The unspecified case recurs — but it is already anchored.',
+   cog:'cheap',adv:{k:'none',t:'nothing — the reference already holds the convention'},
+   gap:'read the pinned convention from the reference',ver:'no re-divergence',meas:'pinned'}),
+ L('Y','action','new leaf protect-any : empty'),
+ L('T','result','reference already pins empty → boolean; bound without negotiation'),
+ FX(()=>addChg('new empty leaf protect-any','ref','0 negotiation','over','reference ✓')),
+
+ STAGE({lab:'Continuous · change 4',place:'over',chg:true,
+   txt:'A leaf is promoted to a nested list, a structural change that ripples to its neighbours. Still reactive, still over-arching.',
+   cog:'heavy',adv:{k:'none',t:'nothing — the re-nest is re-derived from the updated static model'},
+   gap:'re-nest the affected subtree',ver:'subtree re-mapped; parents re-linked',meas:'subtree'}),
+ L('Y','warn','carrierscarrier leaf becomes carrierscarrier-opts[id] — structure changed'),
+ L('T','action','re-nest: new keyed Feature, composedOf re-linked; scope = the new node'),
+ FX(()=>addChg('carrierscarrier → nested keyed list','struct','new node','over','round-trip ✓')),
+ L('T','result','new node re-reconciled by a real agent call; round-trip restored'),
+
+ STAGE({lab:'Continuous · change 5',place:'both-demo',chg:true,
+   txt:'The changing side announces a model revision <b>before</b> it reaches traffic. This reaches the both-cognitive placement, and it is <b>demonstrated by its gain</b>: reactive detection drops one instance before it notices the change, while proactive notification pre-reconciles ahead and drops none.',
+   cog:'med',adv:{k:'adds',t:'demonstrated: proactive notification eliminates the dropped instance — 1 reactive, 0 proactive'},
+   gap:'announce the delta; pre-reconcile ahead of traffic',ver:'measured: dropped instances',meas:'1 → 0 dropped'}),
+ M('t→y','notify','announce delta qos-class before any traffic'),
+ L('Y','action','pre-reconcile the delta by a real agent call; stage the translator ahead'),
+ FX(()=>{addChg('proactive notified change qos-class','pro','ahead of traffic','both','0 dropped (vs 1 reactive)');renderTally();}),
+ L('Y','result','translator live before the first affected instance — nothing dropped'),
+
+ // ---- case 2: service to network (L3SM -> L3NM) ----
+ STAGE({lab:'Case 2 · Service to network',place:'over',
+   txt:'A second case, the cross-abstraction pole: L3SM service model to L3NM network model (RFC 9182). Service intent meets network realization. This is where the both-cognitive end is tested, on four capabilities.',
+   cog:'heavy',adv:{k:'none',t:'the determinate parts still resolve over-arching; the four capabilities test the other end'},
+   gap:'reconcile across abstraction levels',ver:'overlay vs both-cognitive',meas:'4 capabilities'}),
+ L('Y','think','L3SM: customer sites, service bandwidth, QoS'),
+ L('T','think','L3NM: PEs (vpn-node), attachments, VRFs, route targets'),
+ M('y→t','message/send','propose service-to-network reconciliation'),
+
+ STAGE({lab:'Case 2 · Interrogation',place:'both-demo',chg:true,
+   txt:'The PE that realizes a site, and the RD and route targets, are network-assigned and live nowhere in the service model. The over-arching agent cannot reach them. The network agent, holding its realization, answers when asked.',
+   cog:'med',adv:{k:'adds',t:'demonstrated: a fact held only by the counterpart — overlay 0/3, asking 3/3'},
+   gap:'ask the counterpart for its own assignments',ver:'network-assigned attributes correct',meas:'0/3 → 3/3'}),
+ FX(()=>{renderSN();}),
+ L('Y','warn','ne-id, route-distinguisher, route-target: not in the service model'),
+ M('y→t','ask','which PE realizes this site, and its RD and route targets?'),
+ L('T','result','PE-east-7, 65000:1001, [65000:1001] — from my realization'),
+ L('Y','result','network-assigned attributes: 0/3 over-arching, 3/3 by asking'),
+
+ STAGE({lab:'Case 2 · Pragmatics',place:'over',
+   txt:'L3SM bandwidth is in the site frame, L3NM in the PE frame, the inverse. Whether this needs asking turns on whether the model documents the frame. Documented, the over-arching agent reads it. Off the surface, it maps by name, the silent swap, and only asking recovers it.',
+   cog:'med',adv:{k:'adds',t:'conditional: a documented frame is no gain; an undocumented one needs asking, 0/2 → 2/2'},
+   gap:'resolve the reference frame',ver:'frame-correct directions',meas:'doc 2/2 · nodoc 0/2 → 2/2'}),
+ L('T','result','documented frame: over-arching maps svc-input→outbound, svc-output→inbound (2/2)'),
+ L('Y','warn','undocumented frame: by-name maps svc-input→inbound, the silent swap (0/2)'),
+ M('y→t','ask','is inbound/outbound relative to the PE or the site?'),
+ L('T','result','PE-relative; both-cognitive swaps to frame-correct (2/2)'),
+
+ STAGE({lab:'Case 2 · Self-maintenance',place:'both-demo',chg:true,
+   txt:'The access encapsulation set is open. A new value slips past the leaf-level novelty sense and is caught only by a round-trip failure, one dropped. The agent writes itself a value-level novelty rule, and the next new value is caught up front, none dropped.',
+   cog:'cheap',adv:{k:'adds',t:'demonstrated: the apparatus adapts its own trigger — 1 dropped → 0'},
+   gap:'self-add a trigger for the open set',ver:'dropped on the second new value',meas:'1 → 0'}),
+ L('Y','warn','new encapsulation qinq: slips leaf novelty; caught by round-trip (1 dropped)'),
+ L('Y','action','self-add a value-level novelty rule for the open encapsulation set'),
+ L('T','result','new encapsulation vxlan: caught by the self-added rule up front (0 dropped)'),
+
+ STAGE({lab:'Case 2 · Virtual experiment',place:'both-demo',chg:true,
+   txt:'Which L3NM qos-profile realizes the service\'s QoS intent is not a fact the network holds: two profiles share a declared label, and the effective treatment is known only when a profile is provisioned on a test instance and read back. The overlay cannot resolve it, and asking returns the ambiguous candidates. Provisioning a candidate and reading it back settles it.',
+   cog:'med',adv:{k:'adds',t:'demonstrated: a correspondence only testing settles — overlay 0/1, asking 0/1, experiment 1/1'},
+   gap:'provision a candidate on the live side; read back whether it holds',ver:'qos-profile correspondence resolved',meas:'0/1 → 1/1 by experiment'}),
+ L('Y','warn','two profiles share the declared label "low-latency-guaranteed"; the overlay cannot tell them apart (0/1)'),
+ M('y→t','ask','which profile realizes the intent, rate 1G and class real-time?'),
+ L('T','result','cannot say from declarations; qos-prof-2 and qos-prof-3 are both candidates (asking 0/1)'),
+ L('Y','action','provision qos-prof-2 on a test instance; read back the effective treatment'),
+ L('T','result','readback qos-prof-2: rate 1G, class real-time — holds; kept (experiment 1/1)'),
+
+ STAGE({lab:'Stage 9 · The spectrum, read honestly',place:'over',
+   txt:'Where over-arching cognition suffices, full cognition adds nothing, and for a structural interop problem that is the point. Full cognition earns its keep only at the margins, several of which a thin standard substitutes for.',
+   cog:'mech',adv:{k:'none',t:'the readout below marks each capability either way'},
+   gap:'standardize the thin reference and the authority calls, not the full mapping',ver:'every scored act is a real run',meas:'see readout'}),
+ FX(()=>{renderReadout();renderTally();}),
+ L('Y','result','the determinate interop problem is carried by over-arching cognition over two inert systems')
+];
+
+/* ---------- continuous-op table ---------- */
+let chgN=0;
+function addChg(desc,trig,scope,needs,ver){
+  chgN++;const b=$('chgBody');if(chgN===1)b.innerHTML='';
+  const pill={nov:['nov','novelty'],rt:['rt','round-trip'],pro:['pro','notified'],struct:['struct','structural'],ref:['ref','reference']}[trig];
+  const nd=needs==='both'?'<span class="reqtag req-both">both-cognitive</span>':'<span class="reqtag req-over">over-arching</span>';
+  const r=document.createElement('tr');
+  r.innerHTML=`<td>${chgN}</td><td>${desc}</td><td><span class="pill ${pill[0]}">${pill[1]}</span></td><td>${scope}</td><td>${nd}</td><td style="color:var(--result)">${ver}</td>`;
+  b.appendChild(r);renderTally();}
+function renderTally(){const over=Math.min(chgN,4);$('chgTally').innerHTML=
+  `<div style="background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:8px;padding:10px 13px;font-size:12.5px">`+
+  `<b style="color:var(--result)">${over} reactive changes absorbed with zero human mapping edits</b>, by over-arching cognition. `+
+  `The fifth reaches both-cognitive and is demonstrated by its gain: 0 dropped instances against 1 under reactive detection. The sensing scaffolding itself is engineered, not free.</div>`;}
+
+/* ---------- spectrum readout ---------- */
+/* ---------- service-to-network case (real sn-live) ---------- */
+const SN=[
+ ['A · Interrogation','ne-id, RD, route-targets — network-assigned','<span class="no">overlay 0/3</span>','<span class="gain">both-cognitive 3/3</span>','a fact held only by the network side; asking recovers it'],
+ ['B · Pragmatics, documented frame','bandwidth site frame vs PE frame','<span class="yes">overlay 2/2</span>','<span class="eq">= no gain</span>','the model documents the frame; over-arching reads it'],
+ ['B · Pragmatics, undocumented frame','frame off the surface','<span class="no">overlay 0/2</span>','<span class="gain">both-cognitive 2/2</span>','by-name maps the silent swap; only asking recovers it'],
+ ['C · Self-maintenance','open encapsulation set','<span class="no">1 dropped</span>','<span class="gain">0 dropped</span>','the agent self-adds a value-novelty rule after the first miss'],
+ ['D · Virtual experiment','which qos-profile realizes the intent','<span class="no">overlay 0/1 · asking 0/1</span>','<span class="gain">experiment 1/1</span>','two profiles share a declared label; only provisioning and reading back resolves it']
+];
+function renderSN(){let rows=SN.map(r=>`<tr><td>${r[0]}<span style="display:block;font-size:10px;color:var(--faint)">${r[1]}</span></td><td>${r[2]}</td><td>${r[3]}</td><td style="font-size:11px;color:var(--dim)">${r[4]}</td></tr>`).join('');
+  $('snBody').innerHTML=`<table class="readout"><thead><tr><th>Capability</th><th>Over-arching (overlay)</th><th>Both-cognitive</th><th>why</th></tr></thead><tbody>${rows}</tbody></table>`+
+  `<div style="margin-top:10px;color:var(--dim);font-size:12px">Real sn-live run (gpt-4o). Interrogation, self-maintenance and the virtual experiment are both-cognitive wins; pragmatics is conditional, a documented frame the overlay reads, an undocumented one only asking recovers. The determinate work needs no cognitive systems; what turns on a fact held only by the other side, on context no model wrote down, or on an outcome only testing reveals, is where a cognitive counterpart earns its place.</div>`;}
+
+const READOUT=[
+ ['Determinate mapping (209 characteristics)','<span class="yes">full</span> — 20/20 specified','<span class="eq">= no gain</span>'],
+ ['Naming / binding by description','<span class="yes">full</span> with the thin reference','<span class="eq">= no gain</span>'],
+ ['Structural transform (nesting → composedOf)','<span class="yes">full</span>','<span class="eq">= no gain</span>'],
+ ['Reactive drift (novelty, round-trip)','<span class="yes">full</span>','<span class="eq">= no gain</span>'],
+ ['Proactive drift notification','<span class="no">not available</span>','<span class="gain">demonstrated: 0 dropped vs 1 reactive</span>'],
+ ['The <code>empty</code> type','wavers; fixed by a one-line convention','<span class="eq">= no gain</span> — the target type is a convention, not a fact to test'],
+ ['Service boundary (which nodes are services)','needs a published annotation','<span class="eq">= no gain</span> — an authority stipulation is needed at any placement']
+];
+function renderReadout(){
+  let r1=READOUT.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+  let r2=SN.map(r=>`<tr><td>${r[0].replace(/^[ABCD] · /,'')} <span style="color:var(--faint);font-size:10px">${r[1]}</span></td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+  $('readoutBody').innerHTML=
+  `<div style="font-size:11px;color:var(--bus);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Case 1 · L3SM → TMF, cross-format — over-arching suffices</div>`+
+  `<table class="readout"><thead><tr><th>Capability</th><th>Over-arching (both inert)</th><th>Both-cognitive</th></tr></thead><tbody>${r1}</tbody></table>`+
+  `<div style="font-size:11px;color:var(--bus);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 6px">Case 2 · L3SM → L3NM, cross-abstraction — where the counterpart earns its place</div>`+
+  `<table class="readout"><thead><tr><th>Capability</th><th>Over-arching (overlay)</th><th>Both-cognitive</th></tr></thead><tbody>${r2}</tbody></table>`+
+  `<div style="margin-top:10px;color:var(--dim);font-size:12px">Both columns are real runs. <span class="gain">Teal</span> is a demonstrated both-cognitive win, <span class="eq">= no gain</span> the finding that more cognition adds nothing.</div>`;}
+
+/* ---------- engine ---------- */
+let idx=0,timer=null;
+function setMeter(cog){const m=$('cogMeter'),b=$('cogBadge');const map={heavy:[3,'h','cog-heavy','HEAVY'],med:[2,'m','cog-med','MEDIUM'],cheap:[1,'c','cog-cheap','CHEAP'],mech:[0,'c','cog-mech','MECHANICAL']};
+  const [n,cls,badge,lab]=map[cog];b.className='cogbadge '+badge;b.textContent=lab;
+  [...m.children].forEach((i,k)=>{i.className=k<n?('on '+cls):'';});}
+function setAdv(adv){const el=$('advBadge');if(!adv){el.className='advbadge adv-none';el.textContent='—';return;}
+  const cls={none:'adv-none',adds:'adv-adds',needs:'adv-needs'}[adv.k]||'adv-none';
+  el.className='advbadge '+cls;el.textContent=adv.t||(adv.k==='none'?'add nothing here':'');}
+function setSpectrum(place){const over=$('sp-over'),one=$('sp-one'),both=$('sp-both');
+  [over,one,both].forEach(e=>{e.classList.remove('here','aspir','dim');
+    const h=e.querySelector('.youhere');if(h)h.remove();});
+  const mark=(el,cls,txt)=>{el.classList.add(cls);const s=document.createElement('span');s.className='youhere';s.textContent=txt;el.querySelector('.sps').after(s);};
+  if(place==='both-demo'){mark(both,'here','◀ DEMONSTRATED');over.classList.add('dim');one.classList.add('dim');}
+  else if(place==='both'){mark(both,'aspir','ASPIRATIONAL');over.classList.add('dim');one.classList.add('dim');}
+  else {mark(over,'here','◀ YOU ARE HERE');one.classList.add('dim');both.classList.add('dim');}}
+function setDepiction(place){const d=$('depiction'),hY=$('hdrY'),hB=$('hdrBus'),hT=$('hdrT');
+  if(place==='over'){
+    d.style.borderLeftColor='var(--edge)';
+    d.innerHTML='<b style="color:var(--dim)">Both systems inert · one over-arching reasoner.</b> The two columns below are the YANG and TMF sides as this single reasoner reconstructs and checks them over their static artifacts; they are not two live systems. Nothing here is interrogated or experimented on, because there is no live counterpart to ask.';
+    hY.innerHTML='🟢 YANG side · a role of the over-arching reasoner';
+    hB.innerHTML='🟡 reconcile &amp; check · one reasoner';
+    hT.innerHTML='🔵 TMF side · a role of the over-arching reasoner';
+  } else {
+    d.style.borderLeftColor='var(--result)';
+    d.innerHTML='<b style="color:var(--result)">Both sides cognitive.</b> A live agent stands on each system. The bus below carries real exchange: one side asks and the other answers from its own realization, a candidate can be provisioned and read back, and a change can be announced before it lands.';
+    hY.innerHTML='🟢 Agent&nbsp;Y · live YANG-side agent';
+    hB.innerHTML='🟡 A2A bus · ask, answer, notify';
+    hT.innerHTML='🔵 Agent&nbsp;T · live counterpart agent';
+  }}
+function logLine(col,kind,text){const c=$(col);const d=document.createElement('div');d.className='line '+kind;d.textContent=text;c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function busMsg(dir,method,summary){const b=$('bus');const from=dir[0]==='y'?'fromY':dir[0]==='t'?'fromT':'fromV';
+  const dcls=dir[0]==='y'?'y':dir[0]==='t'?'t':'v';
+  const d=document.createElement('div');d.className='msg '+from;
+  d.innerHTML=`<div class="mh"><span class="dir ${dcls}">${dir}</span><span class="method">${method}</span></div><div class="summary">${summary}</div>`;
+  b.appendChild(d);b.scrollTop=b.scrollHeight;}
+function phasesInit(){const p=$('phases');p.innerHTML='';STEPS.filter(s=>s.t==='stage').forEach((s,i)=>{
+  const d=document.createElement('span');d.className='phase'+(s.chg?' chg':'');d.id='ph'+i;d.textContent=s.lab.replace(/^Stage \d+\w* · |^Continuous · |^Done · |^Case \d+ · /,'');p.appendChild(d);});}
+let stageSeq=-1;
+function offsetTop(){return (document.querySelector('.toolbar')?document.querySelector('.toolbar').offsetHeight:120)+12;}
+function scrollToEl(sel){const el=typeof sel==='string'?document.querySelector(sel):sel;if(!el)return;
+  const top=offsetTop();const r=el.getBoundingClientRect();
+  // leave it only if the whole target region is visible under the pinned bar
+  if(r.top>=top-4 && r.bottom<=window.innerHeight+4)return;
+  window.scrollTo({top:Math.max(0,r.top+window.scrollY-top),behavior:'auto'});}
+function openTab(name){document.querySelectorAll('.tabbtn').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.toggle('active',x.id==='pane-'+name));}
+function tabFor(lab){
+  if(/Locate|scatter|authority stipulation/i.test(lab))return 'locate';
+  if(/Bind the shared reference/i.test(lab))return 'ref';
+  if(/Structural gap/i.test(lab))return 'struct';
+  if(/Pin types/i.test(lab))return 'resid';
+  if(/Two translators/i.test(lab))return 'trans';
+  if(/Validate/i.test(lab))return 'trace';
+  if(/Continuous/i.test(lab))return 'change';
+  if(/Case 2/i.test(lab))return 'sn';
+  if(/read honestly/i.test(lab))return 'readout';
+  return null;}
+function applyStep(st){
+  if(st.t==='stage'){stageSeq++;
+    $('stageLab').textContent=st.lab;$('stageTxt').innerHTML=st.txt;
+    setMeter(st.cog);setAdv(st.adv);setSpectrum(st.place);setDepiction(st.place);
+    $('mechTxt').textContent=st.gap;$('verifyTxt').textContent=st.ver;$('measureTxt').textContent=st.meas||'';
+    const chips=document.querySelectorAll('.phase');chips.forEach((c,i)=>{c.classList.toggle('active',i===stageSeq);if(i<stageSeq)c.classList.add('done');});
+    const _tab=tabFor(st.lab);if(_tab)openTab(_tab);
+    scrollToEl('.stagenote');
+  } else if(st.t==='log'){const col=st.who==='Y'?'logY':st.who==='T'?'logT':'bus';logLine(col,st.kind,st.text);scrollToEl('.agents');}
+  else if(st.t==='msg'){busMsg(st.dir,st.method,st.summary);scrollToEl('.agents');}
+  else if(st.t==='fx'){try{st.fn();}catch(e){}scrollToEl('.tabs');}
+  $('counter').textContent=`step ${idx} / ${STEPS.length}`;
+}
+function next(){if(idx>=STEPS.length){stop();return;}applyStep(STEPS[idx]);idx++;
+  $('counter').textContent=`step ${idx} / ${STEPS.length}`;}
+function play(){if(timer){stop();return;}$('play').textContent='⏸ Pause';
+  const sp=+$('speed').value;timer=setInterval(()=>{if(idx>=STEPS.length){stop();}else next();},sp);}
+function stop(){if(timer){clearInterval(timer);timer=null;}$('play').textContent='▶ Play';}
+function reset(){stop();idx=0;stageSeq=-1;chgN=0;
+  ['logY','logT','bus'].forEach(c=>$(c).innerHTML='');
+  $('stageLab').textContent='Ready';$('stageTxt').innerHTML='Press <b>▶ Play</b> to begin.';
+  setMeter('mech');setAdv(null);setSpectrum('over');setDepiction('over');
+  $('mechTxt').textContent='—';$('verifyTxt').textContent='—';$('measureTxt').textContent='';
+  renderLocate();buildLex();drawYang();drawTmf(false);
+  $('residBody').innerHTML='<div class="empty">Reached at the type-pinning stage.</div>';
+  $('transY').innerHTML='<span class="muted">— emitted after the mapping is constructed —</span>';
+  $('transT').innerHTML='<span class="muted">— emitted after the mapping is constructed —</span>';
+  $('traceBody').innerHTML='<div class="empty">Runs at the validate stage.</div>';
+  $('chgBody').innerHTML='<tr><td colspan="6" class="empty">Fills in during continuous operation.</td></tr>';
+  $('chgTally').innerHTML='';$('readoutBody').innerHTML='<div class="empty">Compiles at the end.</div>';
+  $('snBody').innerHTML='<div class="empty">Runs in the service-to-network act.</div>';
+  $('counter').textContent=`step 0 / ${STEPS.length}`;
+  openTab('locate');window.scrollTo({top:0});}
+
+$('play').onclick=play;$('step').onclick=()=>{stop();next();};$('reset').onclick=reset;
+$('aboutToggle').onclick=()=>{const b=$('aboutBody');b.classList.toggle('collapsed');$('aboutToggle').textContent=b.classList.contains('collapsed')?'Show ▼':'Hide ▲';};
+document.querySelectorAll('.tabbtn').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));
+phasesInit();reset();
+</script>
+</body>
+</html>
