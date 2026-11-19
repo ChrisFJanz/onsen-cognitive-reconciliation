@@ -15,6 +15,12 @@ translation: it can be settled once and published as a mapping. Where only one
 of the systems holds that information, it is a binding: it is made by a judgment
 in that system, and no mapping can fix it in advance.
 
+The distinction is not new in substance. Part IV of the note, "Antecedents",
+shows where it already appears in the IETF's own documents (RFC 8309, RFC 9182
+Section 5, and the TEAS TE and service mapping model, which already uses
+"binding" in this sense) and in database research. The note consolidates and
+names it.
+
 | File | What it is |
 |---|---|
 | `Translation_or_Binding_Part1.mp4` | Part 1, the framework and the method, about 20 minutes |
