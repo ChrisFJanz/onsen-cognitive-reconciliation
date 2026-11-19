@@ -16,6 +16,13 @@ the two cases, TM Forum to L3SM and L3SM to L3NM, and why the handling must
 differ, under a framework that distinguishes translation problems from binding
 problems. Start with `translation-or-binding/README.md`.
 
+Later the same day, version 1.1 of the note added Part IV, "Antecedents". It
+sets out where the distinction already appears in the IETF's own documents:
+RFC 9182 Section 5 says of the L3SM that some parts "can be directly mapped to
+the L3NM" while others are "local to the service provider and do not map
+directly to the L3SM"; RFC 8309; and the TEAS TE and service mapping model,
+which already uses "binding" in this sense.
+
 A public demonstrator accompanying the Internet-Draft
 draft-janz-onsen-cognitive-reconciliation. It shows that agent-to-agent
 ontology reconciliation builds and maintains the YANG-to-TMF adapter that
