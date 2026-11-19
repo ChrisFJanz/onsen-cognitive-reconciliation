@@ -1,5 +1,21 @@
 # ONSEN reconciliation demonstrator
 
+## What's new
+
+### 2026-11-19: explanatory note and videos, "Translation or binding"
+
+With the mapping draft's annotations, the reasoner is correct on every specified
+characteristic in 20 of 20 trials. Without them, it agrees on the service roots
+in 3 of 10. Why that one decision cannot be reasoned out, while the rest of the
+mapping can, is the subject of new explanatory material in
+`translation-or-binding/`.
+
+The automated reconciliation process can be hard to follow from the demonstrator
+alone. A concept note and two narrated videos explain how the process handles
+the two cases, TM Forum to L3SM and L3SM to L3NM, and why the handling must
+differ, under a framework that distinguishes translation problems from binding
+problems. Start with `translation-or-binding/README.md`.
+
 A public demonstrator accompanying the Internet-Draft
 draft-janz-onsen-cognitive-reconciliation. It shows that agent-to-agent
 ontology reconciliation builds and maintains the YANG-to-TMF adapter that
@@ -116,6 +132,7 @@ Writes `out/sn-live-result.json`.
                    run_toaster.py, reference_mapper.py (oracle), providers.py
     fixtures/      sample YANG instance data
     demo-movies/   reconciliation-live.html (the demonstrator movie) and a note on it
+    translation-or-binding/   concept note, two narrated videos and their transcripts
     out/           run result files
     transcripts/   recorded runs, for offline replay
 
