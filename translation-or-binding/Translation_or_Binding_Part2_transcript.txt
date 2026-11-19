@@ -1,0 +1,141 @@
+Translation or Binding, Part 2: narration transcript
+
+FROM PART ONE
+
+In the first video, we separated two kinds of model interoperability.
+
+Reconciling two models produces a set of correspondences. Where the two models hold the information that settles a correspondence, it is a translation. It is settled once, and turned into a translator. Where only a system holds that information, it is a binding. It is made by a judgment, in that system.
+
+We also set out a method in five steps: lift, anchor, reconcile, generate, and carry. The anchor step uses a thin shared reference: the short common vocabulary, introduced in the first video, that both sides can consult.
+
+Now we follow two real cases through those steps. Both come from the cognitive reconciliation draft, and from the demonstrator that goes with it.
+
+THE SETTING
+
+Recall the stack from the first video. It varies the IETF reference stack somewhat, so that the models meet clearly at the joints between systems. A business support system is at the top. An operations support system, which is the service orchestrator, in the middle. And network controllers below.
+
+Both cases start from one model: L3SM. That is the IETF's service model for a layer three VPN. It describes the service that a customer is to receive: the sites, the access, the bandwidth, the quality of service. It is the model that the operations system speaks.
+
+Case one is a variant of the upper joint. An intent is not a service model, and case one does not involve an intent. In case one, the system above speaks a service model as well: a TM Forum representation of the same service, which is closer in style to an intent. So two different service models meet there: the TM Forum representation, and L3SM. Case two is the lower joint, as drawn. There, the controllers below speak L3NM: the IETF's network model for the same kind of VPN.
+
+A word on the demonstrator. It works on published models. Its agents are built on an ordinary language model, of middling capability. Every figure that we quote was measured in recorded runs, and the code and the records are public.
+
+CASE ONE
+
+In case one, L3SM meets a TM Forum representation of the same service. That is the form that business and operations software expects.
+
+These are two models of one space. The service is the same, and the concepts are the same. The models differ in naming, and in shape. L3SM nests containers inside containers. The TM Forum side keeps a flat collection of features, linked to one another.
+
+This is the mapping that another ONSEN document sets out to standardize: the YANG to TM Forum mapping draft. That draft does two things that matter here. It gives rules for turning a YANG model into TM Forum form. And it defines a small set of YANG extensions: annotations, added to a model, that mark where a mapping starts.
+
+One annotation marks a node as the root of a customer-facing service. Others mark a resource-facing service, or a resource, or exclude part of the model from the mapping. These annotations record a decision by the model's authority: which nodes a TM Forum client should see as a service. Neither model states that.
+
+In the first run of case one, L3SM carries these annotations.
+
+One over-arching reasoner does the work. It stands over both models, and takes each side's role in turn. It is never shown the mapping draft's rules. Those rules serve only as the yardstick against which its result is scored.
+
+Here is what happened at each step.
+
+Lift. The reasoner lifted each model. From L3SM came the concepts service, site, access, address translation, and multicast, with their relations. From the TM Forum side came the concepts service specification, feature, and characteristic. The two lifts describe one service, in two shapes.
+
+Anchor. Every concept found its anchor in the shared reference.
+
+Reconcile. The reasoner started from the annotated service roots, and worked downward. The L3SM model has ninety nested nodes, and two hundred and nine characteristics. The run was repeated as twenty independent trials. On every characteristic that the mapping draft specifies, the reasoner settled the correct correspondence in all twenty. Twelve of the twenty trials reproduced the whole mapping exactly. In the other eight, every difference fell on one kind of leaf: a YANG type that the mapping draft's type table does not cover. That was settled once, by an entry in the shared reference.
+
+Generate. From the settled correspondences, the reasoner generated two deterministic translators: one into TM Forum form, for the system above, and one into YANG form, for the system below.
+
+Carry. The steps so far worked on the models, which describe every possible service. An instance is one actual service. The demonstrator's instance is a VPN for one named customer, with a cloud access, address translation, and multicast enabled. It goes through the first translator, and comes out as a TM Forum service: a flat set of characteristics and linked features, carrying the same values. That output goes through the second translator, and comes out as an L3SM instance again. The returned instance is compared with the original. They were identical. So nothing was lost or altered in either direction. This check needs no answer key: the instance checks itself.
+
+Notice why the round trip is enough here. The TM Forum instance did not exist beforehand: the translator created it. So its names are the L3SM names, carried across unchanged. There were no independently named individuals to match.
+
+The round trip completed from the instance and the translators alone. No system was asked anything. One reasoner, standing over the two static models, was enough. For this case, more cognition adds nothing. That is a finding of the work.
+
+CASE ONE, SECOND RUN
+
+Case one was then run a second time, with one change. In the first run, the annotations of the mapping draft were present. In the second run, they were removed. The reasoner had the plain L3SM model, as published, and first had to locate the service roots itself.
+
+Over ten independent trials, it arrived at the same set of roots only three times.
+
+The scatter is not noise. Whether a site is a service, for instance, is fixed by neither model. It is a matter of authority. No amount of reasoning over the models settles it.
+
+The two runs differ only in the annotations. So the difference between them measures what the annotations contribute. With them: the correct correspondence, on every specified characteristic, in twenty trials out of twenty. Without them: agreement on the service roots, in three trials out of ten.
+
+So this one correspondence is a binding, inside a case that is otherwise all translation. It is the kind of binding that holds across instances. An authority judges it once, and publishes it: here, as the annotations of the mapping draft.
+
+That is the part of the mapping draft that stays worth standardizing, even where a reasoner can produce the rest of the mapping itself.
+
+CASE TWO
+
+Case two is at the lower joint of the stack. The operations system speaks L3SM downward. The network controllers speak L3NM upward.
+
+L3SM describes the service that the customer is to receive. L3NM describes how the network realizes it: which provider edge router bears each site, which identifiers are assigned, which profiles are applied.
+
+These two models are not alternatives at one level. They belong to adjacent layers. They are models of two different spaces, and the systems behind them have different purposes. The operations system decides service matters. The controller side decides the realization. In the IETF reference stack, some of those realization decisions, such as the choice of provider edge, sit in the orchestrator. In the stack as we have drawn it, they sit on the controller side of the joint.
+
+Each measurement in this case was taken under two conditions. In the first, one over-arching reasoner stands over the two models, and reads them, as in case one. In the second, there is an agent on each side, and the two can ask each other questions.
+
+Lifting went as before. Anchoring covered the concepts that the two models share, and stopped at the seams. Reconciling could not complete from the models. Three bindings were needed.
+
+THREE BINDINGS
+
+The first is a fact. Which provider edge bears this site? What route distinguisher, and what route targets, were assigned? These are settled on the controller side, and the service model does not hold them. This is instance matching of the binding kind: which individual on the network side answers to this site on the service side.
+
+Reading the models, the single reasoner recovered none of the three. With an agent on each side, the service agent asked, the network agent answered, and all three were recovered.
+
+The second is a frame: the context in which a value is stated. The service model has an input bandwidth, stated from the position of the customer site. The network model has a field with a matching name, stated from the position of the provider edge. What is input for one is output for the other.
+
+The single reasoner matched the two by name. The result was correct in structure, and wrong in the data: both values came out wrong. With an agent on each side, the service agent asked which frame applied, and both came out right. Where a model documents its frame, reading is enough, and that part is translation.
+
+The third is an outcome. The service asks for a quality of service. Which network profile realizes it? In the test, two profiles declared the same label. Reading the models could not tell them apart. Asking could not either: the network agent replied that both were candidates.
+
+So the agents ran a virtual experiment. It runs against the network side's own model of the network: in effect, a digital twin. No customer traffic is involved. The service agent asked for one candidate to be provisioned there, and checked the rate and class that resulted. It held, and it was kept.
+
+A fact, a frame, an outcome. Each one is a binding, made by a judgment in the system that holds the information.
+
+Generate and carry then follow. Each side generates its own translator, and it covers the part that translates. And an instance makes the round trip only once the controller side has supplied its facts, and the frame has been applied.
+
+SIDE BY SIDE
+
+Put the two cases side by side.
+
+Lift: in case one, a single reasoner lifts both models. In case two, each agent lifts its own.
+
+Anchor: complete in case one. In case two, it stops at the seams.
+
+Reconcile: in case one, given the annotations, it completes from the two models. In case two, it needs three bindings.
+
+Generate: in case one, the reasoner generates both translators, and they are complete. In case two, each side generates its own, for the part that translates.
+
+Carry: in case one, the round trip runs through the translators alone. In case two, it completes only with the other system's answers.
+
+The five steps are the same. What happens at each step shows which kind of problem you have.
+
+KEEPING IT ALIGNED
+
+One more step applies to both cases. Models change, so the correspondences have to be maintained.
+
+Each translator carries two inexpensive checks, which run all the time. A novelty check notices an element that it has no correspondence for. A round-trip check notices when an instance no longer returns identical to the original. Either one signals that a model has moved. Reconciliation then runs again, only for the node that changed.
+
+The demonstrator ran this on four real changes to the service model: a new leaf, a renamed identifier, a new leaf of a type that the mapping draft does not cover, and a leaf promoted to a nested list. Each was caught by one of the two checks, and re-reconciled on the affected node alone. A single over-arching reasoner is enough for this, because the node is re-derived from the updated model.
+
+What a single reasoner cannot do is hear about a change in advance. A static system does not announce its own changes. With an agent on each side, the changing side can announce a change before it reaches traffic. In the measured case, detection after the fact dropped one instance. Announcement in advance dropped none.
+
+Change can also arrive with no change to a model's structure. Some vocabularies are open, and a new value can appear in an instance. In the measured case, a new kind of access encapsulation slipped past the novelty check, which looks for unknown fields, and not for unknown values. One instance was dropped. The agent then wrote itself a rule for new values, and the next new value was caught, with none dropped.
+
+By the same reasoning, the bindings between individuals have to be kept current. A new site needs a binding of its own. And a fact, once surrendered, can change in the system that holds it.
+
+So maintenance follows the same line. What can be derived from the models, one reasoner maintains. What only a system knows, including that it is about to change, needs an agent in that system.
+
+WHAT IT MEANS
+
+Place the two cases on the line from the first video. Case one sits near the translation end. Its one binding is an authority decision, published once as annotations. Case two sits toward the binding end, and needs a cognitive system on each side.
+
+The consequence for ONSEN follows. The problem areas that the ONSEN problem statement gathers under one word are not one problem.
+
+Where two models describe the same space, the problem is translation. A published set of correspondences is the right deliverable, and it is worth standardizing.
+
+Where systems of different purpose must act in combination, the problem includes bindings. There, no exact mapping can be published in full. The right deliverable is a mechanism for making the bindings by judgment, with a thin stipulation for the decisions that belong to authority.
+
+So before standardizing a mapping, ask where the information that settles it is to be found. If it is in the models, translate. If it is in the systems, bind.
+
+Telling the two apart is the first step toward treating each as its own kind of problem.
