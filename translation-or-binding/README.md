@@ -19,7 +19,7 @@ in that system, and no mapping can fix it in advance.
 |---|---|
 | `Translation_or_Binding_Part1.mp4` | Part 1, the framework and the method, about 20 minutes |
 | `Translation_or_Binding_Part2.mp4` | Part 2, the two cases step by step, about 18 minutes |
-| `translation-or-binding-note.pdf` | The concept note, 10 pages |
+| `translation-or-binding-note.pdf` | The concept note, version 1.1, 12 pages |
 | `Translation_or_Binding_Part1_transcript.txt` | Narration of Part 1 |
 | `Translation_or_Binding_Part2_transcript.txt` | Narration of Part 2 |
 
