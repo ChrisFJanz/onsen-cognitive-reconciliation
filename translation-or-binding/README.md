@@ -23,11 +23,17 @@ names it.
 
 | File | What it is |
 |---|---|
-| `Translation_or_Binding_Part1.mp4` | Part 1, the framework and the method, about 20 minutes |
-| `Translation_or_Binding_Part2.mp4` | Part 2, the two cases step by step, about 18 minutes |
+| `Translation_or_Binding_Part1.mp4` | Part 1, the framework and the method, about 22 minutes |
+| `Translation_or_Binding_Part2.mp4` | Part 2, the two cases step by step, about 20 minutes |
 | `translation-or-binding-note.pdf` | The concept note, version 1.1, 12 pages |
 | `Translation_or_Binding_Part1_transcript.txt` | Narration of Part 1 |
 | `Translation_or_Binding_Part2_transcript.txt` | Narration of Part 2 |
+
+The videos were revised on 2026-11-20. Both now place each kind of correspondence
+on one map, which asks two questions of it: whether it concerns concepts or
+individuals, and whether it can be settled from the models or only from the
+systems. Matching the individuals of one system to those of another is
+described as a binding.
 
 Watch Part 1 first. GitHub does not play video in the browser, so download the
 video files to view them. The videos are AI generated and carefully curated.

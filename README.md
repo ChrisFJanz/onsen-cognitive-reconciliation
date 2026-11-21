@@ -2,6 +2,16 @@
 
 ## What's new
 
+### 2026-11-20: revised videos
+
+The two "Translation or binding" videos in `translation-or-binding/` are
+revised, with their transcripts. Both now place each kind of correspondence on
+one map, which asks two questions of it: whether it concerns concepts or
+individuals, and whether it can be settled from the models or only from the
+systems. Matching the individuals of one system to those of another is
+described as a binding. Part 2 also shows the carried service instance exactly
+as recorded.
+
 ### 2026-11-19: explanatory note and videos, "Translation or binding"
 
 With the mapping draft's annotations, the reasoner is correct on every specified

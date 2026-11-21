@@ -1,5 +1,7 @@
 Translation or Binding, Part 2: narration transcript
 
+
+
 FROM PART ONE
 
 In the first video, we separated two kinds of model interoperability.
@@ -9,6 +11,12 @@ Reconciling two models produces a set of correspondences. Where the two models h
 We also set out a method in five steps: lift, anchor, reconcile, generate, and carry. The anchor step uses a thin shared reference: the short common vocabulary, introduced in the first video, that both sides can consult.
 
 Now we follow two real cases through those steps. Both come from the cognitive reconciliation draft, and from the demonstrator that goes with it.
+
+THE MAP
+
+The first video also drew a map, from two questions. Does a correspondence relate concepts, or individuals? And is it settled from the models, or only from the systems?
+
+That gives translation, standing bindings, and instance matching. Each finding in this video has a place on this map.
 
 THE SETTING
 
@@ -60,7 +68,7 @@ The scatter is not noise. Whether a site is a service, for instance, is fixed by
 
 The two runs differ only in the annotations. So the difference between them measures what the annotations contribute. With them: the correct correspondence, on every specified characteristic, in twenty trials out of twenty. Without them: agreement on the service roots, in three trials out of ten.
 
-So this one correspondence is a binding, inside a case that is otherwise all translation. It is the kind of binding that holds across instances. An authority judges it once, and publishes it: here, as the annotations of the mapping draft.
+So this one correspondence is a binding, inside a case that is otherwise all translation. It is the kind of binding that holds across instances. On the map, it is a standing binding. An authority judges it once, and publishes it: here, as the annotations of the mapping draft.
 
 That is the part of the mapping draft that stays worth standardizing, even where a reasoner can produce the rest of the mapping itself.
 
@@ -78,11 +86,11 @@ Lifting went as before. Anchoring covered the concepts that the two models share
 
 THREE BINDINGS
 
-The first is a fact. Which provider edge bears this site? What route distinguisher, and what route targets, were assigned? These are settled on the controller side, and the service model does not hold them. This is instance matching of the binding kind: which individual on the network side answers to this site on the service side.
+The first is a fact. Which provider edge bears this site? What route distinguisher, and what route targets, were assigned? These are settled on the controller side, and the service model does not hold them. This is instance matching, and it is a binding: which individual on the network side | answers to this site on the service side.
 
 Reading the models, the single reasoner recovered none of the three. With an agent on each side, the service agent asked, the network agent answered, and all three were recovered.
 
-The second is a frame: the context in which a value is stated. The service model has an input bandwidth, stated from the position of the customer site. The network model has a field with a matching name, stated from the position of the provider edge. What is input for one is output for the other.
+The second is a frame: the context in which a value is stated. The service model has an input bandwidth, stated from the position of the customer site. The network model has a field with a matching name, stated from the position of the provider edge. What is input for one | is output for the other.
 
 The single reasoner matched the two by name. The result was correct in structure, and wrong in the data: both values came out wrong. With an agent on each side, the service agent asked which frame applied, and both came out right. Where a model documents its frame, reading is enough, and that part is translation.
 
@@ -90,9 +98,9 @@ The third is an outcome. The service asks for a quality of service. Which networ
 
 So the agents ran a virtual experiment. It runs against the network side's own model of the network: in effect, a digital twin. No customer traffic is involved. The service agent asked for one candidate to be provisioned there, and checked the rate and class that resulted. It held, and it was kept.
 
-A fact, a frame, an outcome. Each one is a binding, made by a judgment in the system that holds the information.
+A fact, a frame, an outcome. The frame and the outcome are standing bindings: judged once, and kept. The fact is instance matching: it is made for each site. Each one is a binding, made by a judgment in the system that holds the information.
 
-Generate and carry then follow. Each side generates its own translator, and it covers the part that translates. And an instance makes the round trip only once the controller side has supplied its facts, and the frame has been applied.
+Generate and carry then follow. Each side generates its own translator, and it covers the part that translates. And an instance makes the round trip | only once the controller side has supplied its facts, and the frame has been applied.
 
 SIDE BY SIDE
 
@@ -110,6 +118,16 @@ Carry: in case one, the round trip runs through the translators alone. In case t
 
 The five steps are the same. What happens at each step shows which kind of problem you have.
 
+ON THE MAP
+
+Now place the two cases on the map.
+
+Case one is almost all in one cell. Its mapping, all two hundred and nine characteristics, is translation between concepts. Its one binding, which nodes are service roots, is a standing binding: an authority decides it once, and the annotations record it.
+
+Case two spreads across the map. The concepts that the two models share translate. The frame of the bandwidth values, and the profile that realizes a quality of service, are standing bindings. And the facts that the controller assigns, the provider edge, the route distinguisher and the route targets, are instance matching: made for each site, and kept current.
+
+So the map shows what each case needs. A standing binding needs a judgment once. Instance matching needs an agent in the system, for as long as it runs.
+
 KEEPING IT ALIGNED
 
 One more step applies to both cases. Models change, so the correspondences have to be maintained.
@@ -118,7 +136,7 @@ Each translator carries two inexpensive checks, which run all the time. A novelt
 
 The demonstrator ran this on four real changes to the service model: a new leaf, a renamed identifier, a new leaf of a type that the mapping draft does not cover, and a leaf promoted to a nested list. Each was caught by one of the two checks, and re-reconciled on the affected node alone. A single over-arching reasoner is enough for this, because the node is re-derived from the updated model.
 
-What a single reasoner cannot do is hear about a change in advance. A static system does not announce its own changes. With an agent on each side, the changing side can announce a change before it reaches traffic. In the measured case, detection after the fact dropped one instance. Announcement in advance dropped none.
+What a single reasoner cannot do | is hear about a change in advance. A static system does not announce its own changes. With an agent on each side, the changing side can announce a change before it reaches traffic. In the measured case, detection after the fact dropped one instance. Announcement in advance dropped none.
 
 Change can also arrive with no change to a model's structure. Some vocabularies are open, and a new value can appear in an instance. In the measured case, a new kind of access encapsulation slipped past the novelty check, which looks for unknown fields, and not for unknown values. One instance was dropped. The agent then wrote itself a rule for new values, and the next new value was caught, with none dropped.
 
@@ -130,12 +148,12 @@ WHAT IT MEANS
 
 Place the two cases on the line from the first video. Case one sits near the translation end. Its one binding is an authority decision, published once as annotations. Case two sits toward the binding end, and needs a cognitive system on each side.
 
-The consequence for ONSEN follows. The problem areas that the ONSEN problem statement gathers under one word are not one problem.
+The consequence for ONSEN follows. The problem areas that the ONSEN problem statement gathers under one word | are not one problem.
 
-Where two models describe the same space, the problem is translation. A published set of correspondences is the right deliverable, and it is worth standardizing.
+Where two models describe the same space, the models translate. A published set of correspondences is the right deliverable, and it is worth standardizing. Where each side has also named the same individuals independently, matching them is still a binding. The third video takes up that case.
 
 Where systems of different purpose must act in combination, the problem includes bindings. There, no exact mapping can be published in full. The right deliverable is a mechanism for making the bindings by judgment, with a thin stipulation for the decisions that belong to authority.
 
-So before standardizing a mapping, ask where the information that settles it is to be found. If it is in the models, translate. If it is in the systems, bind.
+So before standardizing a mapping, ask where the information that settles it is to be found. If it is in the models, translate. If it is in the systems, bind. And if you bind, ask one thing more: does the binding hold for every instance, or must it be made for each one?
 
 Telling the two apart is the first step toward treating each as its own kind of problem.
