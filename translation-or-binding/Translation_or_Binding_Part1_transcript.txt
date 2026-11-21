@@ -1,5 +1,7 @@
 Translation or Binding, Part 1: narration transcript
 
+
+
 ONE WORD
 
 People who build networks use one word all the time. The word is mapping.
@@ -8,7 +10,7 @@ Two systems have to work together. Each describes the world in its own model. So
 
 Sometimes that works well. Sometimes it does not.
 
-The ONSEN working group at the IETF has recorded a case of this. The ONSEN problem statement notes that an earlier effort to define an exact mapping between the service layer and the network layer was determined to be impractical. But it concludes that guidance on the interaction between those layers is still needed.
+The ONSEN working group at the IETF has recorded a case of this. The ONSEN problem statement notes that an earlier effort | to define an exact mapping between the service layer and the network layer | was determined to be impractical. But it concludes that guidance on the interaction between those layers is still needed.
 
 The same pattern recurs across the problem areas that the group lists. A single standardized mapping is reached for. It proves insufficient, or impractical. And the need it was meant to meet does not go away.
 
@@ -20,17 +22,17 @@ CORRESPONDENCES
 
 Start with two systems, and the model that each one keeps. To make the systems work together, we reconcile the two models.
 
-Reconciling does not fuse the two models into a third. Each system keeps its own. What reconciliation produces is a set of correspondences. Each correspondence ties a concept on one side to a concept on the other.
+Reconciling does not fuse the two models into a third. Each system keeps its own. What reconciliation produces is a set of correspondences. Each correspondence ties a concept on one side | to a concept on the other.
 
 So the question comes down to one correspondence at a time. What would it take to settle it?
 
-The answer depends on one thing: where the information that would settle it is to be found.
+The answer depends on one thing: where the information that would settle it | is to be found.
 
 WHERE THE INFORMATION LIVES
 
 Sometimes that information is already in the two models. It is stated outright, or it is fixed by what the models do state.
 
-One side gives a concept a different name. The finer model spells out a detail that the coarser one only implies. One side lacks a concept, but can reconstruct it from what it holds.
+One side gives a concept a different name. The finer model spells out a detail | that the coarser one only implies. One side lacks a concept, but can reconstruct it from what it holds.
 
 A correspondence like this can be settled from the models alone. The systems behind them need not be involved at all.
 
@@ -44,15 +46,27 @@ A correspondence like this cannot be settled from the models. Settling it has to
 
 That is a binding. It is made by a judgment, in the system where the information lives.
 
-The timing of that judgment varies. Some bindings hold across instances: an authority decision, or a stable frame. Those are judged once, and recorded. Others are specific to each instance: a fact the network assigns, or an outcome that only the instance reveals. Those cannot be judged until the instance is in hand. They are made afresh, each time.
-
 So: translation, where the models settle the correspondence. Binding, where only a system can.
+
+TWO QUESTIONS
+
+So there are two questions to ask of any correspondence. The first we have just seen: can it be settled from the models, or only from the systems? The second is what it relates: concepts, or individuals.
+
+Between concepts, and settled from the models: that is a translation. It is settled once, and built into a translator.
+
+Between concepts, but settled only from the systems: call that a standing binding. It may be a decision of authority, a frame, or an outcome that holds for every instance. It is judged once, and then recorded.
+
+Between individuals, the same division applies. Some individuals live in the model itself: the values of an enumeration, or a set of units. Those translate.
+
+Others live in the world: a site, a router, a port. Which real thing answers to which name is written in no model. Those are bound, one by one, and the bindings are kept current. That is called instance matching, and we return to it.
+
+Individuals that live in the model translate. Individuals that live in the world are bound. We will use this map again.
 
 TWO EXAMPLES
 
 Two examples, in principle.
 
-First: a transport network controller, and two different models that can each be used to configure it. Both models describe the same space: the same connections, the same ports, the same parameters. They differ in naming, and in how much detail each one spells out. Every correspondence between them can be settled from the two models. This is a translation problem.
+First: a transport network controller, and two different models that can each be used to configure it. Both models describe the same space: the same connections, the same ports, the same parameters. They differ in naming, and in how much detail each one spells out. Every correspondence between their terms can be settled from the two models. For the models, this is a translation problem.
 
 Second: a business support system, meeting an operations support system. The business system expresses an intent: the characteristics that a service should yield. The operations system speaks service models: structured descriptions of the services it can deliver.
 
@@ -60,19 +74,19 @@ An intent is not the service itself, so it is not a service model. Which service
 
 The two kinds usually track a difference in the systems themselves. Models of the same space are generally gateways to systems of like purpose. Their concepts coincide, up to naming and detail. So the correspondences are translations.
 
-Models of different spaces are generally gateways to systems of different purpose that must accomplish something in combination. Each space then holds concepts with no counterpart in the other. So some correspondences must be bindings.
+Models of different spaces are generally gateways to systems of different purpose | that must accomplish something in combination. Each space then holds concepts with no counterpart in the other. So some correspondences must be bindings.
 
 THE STACK
 
-Now place this in an operator's systems. The IETF documents give a reference stack. At the top is the customer. Below is service orchestration. Below that is network orchestration and control. A service model, such as L3SM, sits above the orchestrator. A network model, such as L3NM, sits below it.
+Now place this in an operator's systems. The IETF documents give a reference stack. At the top is the customer. Below is service orchestration. Below that | is network orchestration and control. A service model, such as L3SM, sits above the orchestrator. A network model, such as L3NM, sits below it.
 
 For this discussion, we vary that picture somewhat, so that the models meet clearly at the joints between systems. We do it in two steps.
 
 First, we name the system at the top. It is a business support system, and it expresses intent. An intent states the characteristics that a service should yield. It is not the service itself, so it is not a service model.
 
-Beneath it is the operations support system, which is the service orchestrator. It speaks service models upward. So two models meet at this joint: intent from above, and service models from below. They have to be reconciled, and each side then applies its translator. Which service satisfies an intent is a decision that the operations system makes. So this joint carries bindings.
+Beneath it is the operations support system, which is the service orchestrator. It speaks service models upward. So two models meet at this joint: intent from above, and service models from below. They have to be reconciled, and each side then applies its translator. Which service satisfies an intent | is a decision that the operations system makes. So this joint carries bindings.
 
-Second, we draw the joint below the operations system in the same way. The operations system speaks service models downward. The network controllers speak network models upward. Again two models meet, and again they have to be reconciled. And again there are bindings, because how a service is realized is settled on the controller side.
+Second, we draw the joint below the operations system in the same way. The operations system speaks service models downward. The network controllers speak network models upward. Again two models meet, and again they have to be reconciled. And again there are bindings, because how a service is realized | is settled on the controller side.
 
 Drawing it this way keeps the network domain models out of the operations system, which can then work at a more abstract level. In the reference stack as drawn, the same reconciliation takes place inside the orchestrator. Here, we draw it at the joint.
 
@@ -82,7 +96,7 @@ THE BOUNDARY IS WANTED
 
 There is a reason the spaces differ. It is not a modelling failure to be repaired.
 
-The layers are drawn so that neither side needs to carry the other's concepts. A business system that issues an intent is built not to know the service models that the operations system reasons in. An operations system that hands service requirements to a controller is built not to know the resources that the controller manages.
+The layers are drawn so that neither side needs to carry the other's concepts. A business system that issues an intent | is built not to know the service models that the operations system reasons in. An operations system that hands service requirements to a controller | is built not to know the resources that the controller manages.
 
 The boundary is wanted. So the aim across it is to carry only what must cross: the intent, the requirement, the few facts a binding needs. Neither side should have to learn the other's model. And the two models should not be merged into one, because that would dissolve the separation the architecture rests on.
 
@@ -92,13 +106,13 @@ WHAT FOLLOWS
 
 Which kind a problem is has direct consequences.
 
-For a translation problem, a published set of correspondences is the right deliverable, and a sufficient one. It is settled once. Each instance then passes through it deterministically. No cognitive system is needed on either side.
+For a translation problem, a published set of correspondences is the right deliverable, and a sufficient one. It is settled once. Each instance then passes through it deterministically. No cognitive system is needed on either side. That holds as long as the two sides have not each named the same things independently. We come back to that case.
 
 For a binding problem, there is no complete set to publish, because part of it is not fixed until the instance is in hand. That is why an exact mapping is found impractical.
 
-What can be delivered instead is a mechanism: a way to make each binding by judgment, as it is needed. With it goes a thin stipulation that fixes, once, the few authority decisions that hold across instances. And it needs a cognitive system on each side, because each binding is judged where its information lives.
+What can be delivered instead is a mechanism: a way to make each binding by judgment, as it is needed. With it goes a thin stipulation | that fixes, once, the few authority decisions that hold across instances. And it needs a cognitive system on each side, because each binding is judged where its information lives.
 
-A binding cannot be converted into a translation by any amount of standardization. The information that would settle it is not there to be written down.
+A binding cannot be converted into a translation by any amount of standardization. The information that would settle it | is not there to be written down.
 
 THE METHOD
 
@@ -114,7 +128,7 @@ Two: anchor. The two lifted models are anchored to a thin shared reference. That
 
 A thin shared reference is a short common vocabulary, which both sides can consult. Each entry has a stable identifier, a preferred name with its synonyms, a broad class, a definition that tells it apart from its neighbours, and an example. It has no structure: it does not say how the entries relate to one another. That is the sense of thin. It is far less than either model, and it is not a mapping.
 
-Its purpose is to give the two lifted models common points to attach their concepts to. Attachment goes by the definition, never by the bare name, so that two terms which happen to share a label are not taken for the same thing. It is also where a small convention is recorded, once it has been agreed: how an identifier is to be written, for example.
+Its purpose is to give the two lifted models common points to attach their concepts to. Attachment goes by the definition, never by the bare name, so that two terms which happen to share a label | are not taken for the same thing. It is also where a small convention is recorded, once it has been agreed: how an identifier is to be written, for example.
 
 Such a reference can come from three places. It can be published in advance, by a standards body or a community. It can be derived from the models themselves: in the demonstrator, the entries on the YANG side are taken directly from the module's names and descriptions. Or, where none exists, the agents can build one together.
 
@@ -134,15 +148,15 @@ INSTANCE TERMS
 
 One point about the last step needs care. The translators carry instances. They do not, by themselves, match them.
 
-Sometimes there is nothing to match. The instance on the far side does not exist until the translator creates it, so its names are the sender's names, carried across unchanged. But often each system already has its own names for things. Then the terms that appear in instances have to be aligned as well. The methodology calls this instance matching, and the terms are of three kinds.
+Sometimes there is nothing to match. The instance on the far side does not exist until the translator creates it, so its names are the sender's names, carried across unchanged. But often each system already has its own names for things. Then the terms that appear in instances have to be aligned as well. Those terms are of three kinds.
 
 First: identifiers that one side issues, and the other merely receives. A service identifier is an example. The translator carries it unchanged, and nothing needs aligning.
 
-Second: values from a vocabulary that the model itself defines. An enumeration, for example, or a set of units. These values appear in instances, but the list of possible values is in the model. So their correspondences are settled during reconciliation, and built into the translator. That is translation.
+Second: values from a vocabulary that the model itself defines. An enumeration, for example, or a set of units. These values appear in instances, but the list of possible values is in the model. So their correspondences are settled during reconciliation, and built into the translator. That is translation. These are the individuals that live in the model.
 
-Third: individuals that each system names independently, for the same real thing. One system knows a site by a place name. The other knows the same site by an inventory number. Neither model says which name answers to which. That is held in the systems' own data. So it is a binding, at the level of the instance.
+Third: individuals that each system names independently, for the same real thing. One system knows a site by a place name. The other knows the same site by an inventory number. Neither model says which name answers to which. That is held in the systems' own data. Matching these individuals is what the methodology calls instance matching. And it is a binding. These are the individuals that live in the world.
 
-Such a binding is made in the ways already described. By an identity anchor: a shared identifier, or a table of equivalents, agreed and recorded. By asking the system that holds the fact. Or by experiment. So instance terms divide in the same way as the models do: into translation, and binding.
+Such a binding is made in the ways already described. By an identity anchor: a shared identifier, or a table of equivalents, agreed and recorded. By asking the system that holds the fact. Or by experiment. So instance terms divide in the same way as the models do: into translation, and binding. Instance matching is the binding part.
 
 One caution about the round trip. It shows that the translation loses nothing. It does not show that the right individual was chosen. A wrong pairing of names, if it can be reversed, would still return the original. For a binding, the assurance has to come from how the binding was made.
 
@@ -160,7 +174,7 @@ Reconciling differs most. In a translation problem, it completes from the two mo
 
 The translator differs. In a translation problem it is complete, and nothing more is judged at run time. In a binding problem it covers the part that translates, and leaves the bindings to be made as instances arrive.
 
-And carrying differs. In a translation problem, an instance makes the round trip through the translators alone. In a binding problem, the round trip returns the original only once the other system has supplied its part.
+And carrying differs. In a translation problem, an instance makes the round trip through the translators alone. In a binding problem, the round trip returns the original | only once the other system has supplied its part.
 
 The steps do not change. What happens at each step does.
 
@@ -173,5 +187,7 @@ Where there are none, one reasoner standing over the two static models is enough
 Where there are many, a cognitive system is needed on each side, to make the bindings as they arise.
 
 How much cognition a problem needs, and where it must be placed, follows from that share.
+
+The kind of binding matters too. A standing binding is judged once. An authority can make it, and publish it, and nothing more is needed. Instance matching goes on for as long as the systems run. So it needs an agent in each system, permanently.
 
 In the second video, we take the two cases of the cognitive reconciliation draft, one from near each end of this line, and follow them through the five steps.
