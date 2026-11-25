@@ -2,6 +2,10 @@
 
 ## What's new
 
+### 2026-11-25: housekeeping
+
+A usage comment in `src/run_toaster.py` now gives a neutral path.
+
 ### 2026-11-20: revised videos
 
 The two "Translation or binding" videos in `translation-or-binding/` are
